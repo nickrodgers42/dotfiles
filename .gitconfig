@@ -1,0 +1,10 @@
+[user]
+	name = Nick Rodgers
+	email = nick.rodgers42@gmail.com
+
+[alias]
+    gslog = -c color.ui=always log --graph --decorate --date=relative --format=format:'%C(green)%h%C(yellow) %s%C(reset)%w(0,6,6)%C(bold green)\n  %C(bold red)%aN%C(reset) %cr%C(reset)%w(0,0,0)\n%-D\n%C(reset)' --all
+    fixup = commit --amend --reuse-message=HEAD
+
+[core]
+    excludesFile = ~/.gitignore

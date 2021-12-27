@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime
+import logging
 import os
 import pathlib
 import shutil
@@ -17,23 +18,33 @@ def make_backup(file_path):
     return backup_path
 
 
-def link_vimrc():
-    vimrc_dotfile = pathlib.Path(".vimrc").resolve()
-    vimrc_path = pathlib.Path.home() / ".vimrc"
-    if vimrc_path.is_symlink() and vimrc_path.resolve() == vimrc_dotfile:
-        print("~/.vimrc already symlinked to dotfile")
+def link_file(file_name):
+    dotfile = pathlib.Path(file_name).resolve()
+    file_path = pathlib.Path.home() / file_name
+
+    if not dotfile.is_file():
+        error_msg = f"{str(dotfile)} not found"
+        logging.error(error_msg)
+        raise Exception(error_msg)
+
+    if file_path.is_symlink() and file_path.resolve() == dotfile:
+        logging.warning("%s already symlinked to dotfile", file_name)
         return
-    if vimrc_path.is_symlink() and vimrc_path.resolve() != vimrc_dotfile:
-        raise Exception("~/.vimrc is already symlinked to " + virmc_path.resolve())
-    if vimrc_path.is_file() and not vimrc_path.is_symlink():
-        backup_path = make_backup(vimrc_path)
-        print("Found ~/.vimrc file. Backup made at ", backup_path)
-    os.symlink(vimrc_dotfile, vimrc_path)
-    print("Successfully symlinked ~/.vimrc to dotfile")
+    if file_path.is_symlink() and file_path.resolve() != dotfile:
+        error_msg = f"{file_name} is already symlinked to {file_path.resolve()}"
+        logging.error(error_msg)
+        raise Exception(error_msg)
+    if file_path.is_file() and not file_path.is_symlink():
+        backup_path = make_backup(file_path)
+        logging.info("Found %s. Backup created at %s", file_path, backup_path)
+
+    os.symlink(dotfile, file_path)
+    logging.info("Successfully symlinked %s to %s", file_path, dotfile)
 
 
 def link_dotfiles():
-    link_vimrc()
+    for file_name in [".vimrc", ".gitconfig"]:
+        link_file(file_name)
 
 
 if __name__ == "__main__":
