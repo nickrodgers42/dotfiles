@@ -38,6 +38,7 @@ set undofile
 
 set ttimeoutlen=100
 map Y y$
+imap jj <Esc>
 
 set listchars=space:⋅,tab:-->
 set list
@@ -59,3 +60,4 @@ nnoremap <c-p> :Files<cr>
 filetype plugin on
 let g:nerdspacedelims = 1
 let g:nerddefaultalign = 'left'
+
