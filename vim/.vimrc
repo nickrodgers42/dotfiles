@@ -9,11 +9,14 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set autoindent
+set smartindent
 set nostartofline
 
 set number relativenumber
 set nowrap
 set colorcolumn=80
+set scrolloff=8
+set signcolumn=yes
 
 set wildmenu
 set showcmd
@@ -39,17 +42,19 @@ set undofile
 set ttimeoutlen=100
 map Y y$
 imap jj <Esc>
+let mapleader=" "
 
 set listchars=space:⋅,tab:-->
 set list
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'morhetz/gruvbox'
-Plug 'valloric/youcompleteme'
-Plug 'junegunn/fzf', {'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'gruvbox-community/gruvbox'
 Plug 'preservim/nerdcommenter'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'neovim/nvim-lspconfig'
 
 call plug#end()
 
