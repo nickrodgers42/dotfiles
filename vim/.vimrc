@@ -120,10 +120,10 @@ local lsp_installer = require "nvim-lsp-installer"
 local servers = {
   "bashls",
   "pyright",
-  "remark_ls",
   "tsserver",
   "vimls",
   "yamlls",
+  "zk"
 }
 
 for _, name in pairs(servers) do
