@@ -12,6 +12,10 @@ A collection of dotfiles managed using GNU stow for symlinks
 
 * GNU Stow
 
+Recommended:
+  * Install a [NerdFont](https://github.com/ryanoasis/nerd-fonts) to get pretty
+  icons
+
 ### vim
 
 * [vim-plug](https://github.com/junegunn/vim-plug)
