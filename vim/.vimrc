@@ -92,6 +92,19 @@ let g:nerddefaultalign = 'left'
 
 set completeopt=menu,menuone,noselect
 
+augroup NERDTREE
+    autocmd!
+    " Exit Vim if NERDTree is the only window remaining in the only tab.
+    autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+    " Close th tab if NERDTree is the only window remaining in it.
+    autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endife
+augroup END
+
+augroup HTML_TAB
+    autocmd!
+    autocmd FileType html setlocal tabstop=2
+augroup END
+
 lua << EOF
 local cmp = require "cmp"
 local cmp_nvim_lsp = require "cmp_nvim_lsp"
