@@ -91,6 +91,11 @@ nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>h <C-w>h
+nnoremap <leader>l <C-w>l
+
 filetype plugin on
 let g:nerdspacedelims = 1
 let g:nerddefaultalign = 'left'
@@ -119,6 +124,7 @@ local lsp_installer = require "nvim-lsp-installer"
 -- Include the servers you want to have installed by default below
 local servers = {
   "bashls",
+  "gopls",
   "pyright",
   "tsserver",
   "vimls",
