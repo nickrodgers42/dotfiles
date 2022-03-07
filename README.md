@@ -10,9 +10,12 @@ A collection of dotfiles managed using GNU stow for symlinks
 
 ## Dependencies
 
+### Required
+
 * GNU Stow
 
-Recommended:
+### Recommended:
+
   * Install a [NerdFont](https://github.com/ryanoasis/nerd-fonts) to get pretty
   icons
 

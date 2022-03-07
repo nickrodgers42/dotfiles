@@ -100,6 +100,8 @@ filetype plugin on
 let g:nerdspacedelims = 1
 let g:nerddefaultalign = 'left'
 
+let NERDTreeShowHidden = 1
+
 set completeopt=menu,menuone,noselect
 
 augroup NERDTREE
@@ -124,7 +126,6 @@ local lsp_installer = require "nvim-lsp-installer"
 -- Include the servers you want to have installed by default below
 local servers = {
   "bashls",
-  "gopls",
   "pyright",
   "tsserver",
   "vimls",
