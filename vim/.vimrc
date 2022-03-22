@@ -42,11 +42,13 @@ set undodir=~/.vim/undodir
 set undofile
 
 set ttimeoutlen=100
+set updatetime=50
 map Y y$
 imap jj <Esc>
 let mapleader=" "
 
 set guicursor=
+set termguicolors
 set listchars=space:⋅,tab:-->
 set list
 
@@ -58,14 +60,11 @@ Plug 'preservim/nerdcommenter'
 
 Plug 'christoomey/vim-tmux-navigator'
 
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ryanoasis/vim-devicons'
-Plug 'preservim/nerdtree'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'neovim/nvim-lspconfig'
@@ -90,8 +89,9 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
 
 let g:tmux_navigator_no_mappings = 1
 
@@ -105,17 +105,8 @@ filetype plugin on
 let g:nerdspacedelims = 1
 let g:nerddefaultalign = 'left'
 
-let NERDTreeShowHidden = 1
-
 set completeopt=menu,menuone,noselect
 
-augroup NERDTREE
-    autocmd!
-    " Exit Vim if NERDTree is the only window remaining in the only tab.
-    autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-    " Close th tab if NERDTree is the only window remaining in it.
-    autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endife
-augroup END
 
 augroup HTML_TAB
     autocmd!
@@ -246,4 +237,8 @@ lua << EOF
 local devicons = require "nvim-web-devicons"
 
 devicons.setup { default = true; }
+EOF
+
+lua << EOF
+require'nvim-tree'.setup {}
 EOF
