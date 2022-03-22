@@ -60,6 +60,9 @@ Plug 'preservim/nerdcommenter'
 
 Plug 'christoomey/vim-tmux-navigator'
 
+Plug 'tpope/vim-fugitive'
+
+Plug 'airblade/vim-gitgutter'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
