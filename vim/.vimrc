@@ -84,7 +84,7 @@ Plug 'hrsh7th/vim-vsnip'
 call plug#end()
 
 colorscheme gruvbox
-set background=dark
+highlight Normal guibg=none
 
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <C-p> <cmd>lua require('telescope.builtin').find_files()<cr>
@@ -110,6 +110,16 @@ let g:nerddefaultalign = 'left'
 
 set completeopt=menu,menuone,noselect
 
+highlight ExtraWhitespace ctermbg=red guibg=red
+augroup HIGHLIGHT_WHITESPACE
+    autocmd!
+    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+    match ExtraWhitespace /\s\+$/
+    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+    autocmd BufWinLeave * call clearmatches()
+augroup END
 
 augroup HTML_TAB
     autocmd!
