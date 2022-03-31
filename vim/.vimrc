@@ -64,6 +64,8 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'airblade/vim-gitgutter'
 
+Plug 'nvim-lualine/lualine.nvim'
+
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-web-devicons'
@@ -254,4 +256,12 @@ EOF
 
 lua << EOF
 require'nvim-tree'.setup {}
+EOF
+
+lua << EOF
+require('lualine').setup {
+  options = {
+    theme = 'gruvbox'
+  }
+}
 EOF
