@@ -53,6 +53,7 @@ set listchars=space:⋅,tab:-->
 set list
 
 call plug#begin('~/.vim/plugged')
+Plug 'vim-python/python-syntax'
 
 Plug 'gruvbox-community/gruvbox'
 
@@ -99,6 +100,7 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 nnoremap <leader>n :NvimTreeFindFile<CR>
 
 let g:tmux_navigator_no_mappings = 1
+let g:python_highlight_all = 1
 
 nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
