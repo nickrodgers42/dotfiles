@@ -67,6 +67,8 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'nvim-lualine/lualine.nvim'
 
+Plug 'psliwka/vim-smoothie'
+
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-web-devicons'
