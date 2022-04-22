@@ -2,6 +2,7 @@
 
 A collection of dotfiles managed using GNU stow for symlinks
 
+
 ## Installation
 
 1. Clone this repo
@@ -10,21 +11,23 @@ A collection of dotfiles managed using GNU stow for symlinks
 
 ## Dependencies
 
+
 ### Required
 
 * GNU Stow
 
-### Recommended:
 
-* Install a [NerdFont](https://github.com/ryanoasis/nerd-fonts) to get pretty
-icons
+-------------------------------------------------------------------------------
+
+## Tool-specific Dependencies
+
 
 ### vim
 
 This .vimrc uses Neovim-specific syntax and features. To use the .vimrc in
 Neovim (from `:help nvim-from-vim`):
 
-In `~/config/nvim/init.vim`:
+In `~/.config/nvim/init.vim`:
 
 ```vim
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -37,7 +40,14 @@ install plugins`
 * [ripgrep](https://github.com/BurntSushi/ripgrep)
 * [fd](https://github.com/sharkdp/fd)
 
+
 ### tmux
 
 * [tpm](https://github.com/tmux-plugins/tpm) - run `<leader> + I` to install
 plugins
+
+
+### fonts
+
+* Comic Mono Font from https://github.com/dtinth/comic-mono-font
+* Patched using [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
