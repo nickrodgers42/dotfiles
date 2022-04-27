@@ -135,6 +135,15 @@ augroup HTML_TAB
 augroup END
 
 lua << EOF
+require('Comment').setup()
+require('nvim-web-devicons').setup { default = true; }
+require('nvim-tree').setup {}
+require('lualine').setup {
+  options = {
+    theme = 'gruvbox'
+  }
+}
+
 local cmp = require "cmp"
 local cmp_nvim_lsp = require "cmp_nvim_lsp"
 local lsp_config = require "lspconfig"
@@ -255,26 +264,4 @@ lsp_installer.on_server_ready(function(server)
   server:setup(opts)
 end)
 
-EOF
-
-lua << EOF
-local devicons = require "nvim-web-devicons"
-
-devicons.setup { default = true; }
-EOF
-
-lua << EOF
-require'nvim-tree'.setup {}
-EOF
-
-lua << EOF
-require('lualine').setup {
-  options = {
-    theme = 'gruvbox'
-  }
-}
-EOF
-
-lua << EOF
-require('Comment').setup()
 EOF
