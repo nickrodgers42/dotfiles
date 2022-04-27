@@ -53,39 +53,37 @@ set listchars=space:⋅,tab:-->
 set list
 
 call plug#begin('~/.vim/plugged')
+" General Plugins
+Plug 'airblade/vim-gitgutter'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'gruvbox-community/gruvbox'
+Plug 'numToStr/Comment.nvim'
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'preservim/nerdcommenter'
+Plug 'psliwka/vim-smoothie'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-python/python-syntax'
 
-Plug 'gruvbox-community/gruvbox'
-
-Plug 'preservim/nerdcommenter'
-
-Plug 'christoomey/vim-tmux-navigator'
-
-Plug 'tpope/vim-fugitive'
-
-Plug 'airblade/vim-gitgutter'
-
-Plug 'nvim-lualine/lualine.nvim'
-
-Plug 'psliwka/vim-smoothie'
-
-Plug 'numToStr/Comment.nvim'
-
+" Telescope
 Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" nvim-tree
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'nvim-telescope/telescope.nvim'
 
+" nvim-lsp-installer
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 
-Plug 'hrsh7th/cmp-nvim-lsp'
+" nvim-cmp
 Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/vim-vsnip'
 
 call plug#end()
