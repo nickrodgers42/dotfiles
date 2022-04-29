@@ -68,6 +68,7 @@ Plug 'vim-python/python-syntax'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 " nvim-tree
 Plug 'kyazdani42/nvim-web-devicons'
@@ -138,6 +139,8 @@ lua << EOF
 require('Comment').setup()
 require('nvim-web-devicons').setup { default = true; }
 require('nvim-tree').setup {}
+require('telescope').setup()
+require('telescope').load_extension('fzf')
 require('lualine').setup {
   options = {
     theme = 'gruvbox'
