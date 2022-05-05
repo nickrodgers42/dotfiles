@@ -63,6 +63,9 @@ Plug 'preservim/nerdcommenter'
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-python/python-syntax'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'preservim/vim-pencil'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -135,6 +138,66 @@ augroup HTML_TAB
     autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
 
+" ============= Word Processing ===============
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+" let g:limelight_default_coefficient = 0.7
+let g:limelight_paragraph_span = -1
+" let g:limelight_bop = '\n'
+" let g:limelight_eop = '\ze\n^\s*'
+let g:limelight_priority = -1
+let g:goyo_width=81
+
+function! s:goyo_enter()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
+  setlocal noshowmode
+  setlocal noshowcmd
+  Limelight
+  " ...
+  map j gj
+  map k gk
+
+  setlocal formatoptions=a
+  setlocal textwidth=80
+  setlocal noexpandtab
+  setlocal wrap
+  setlocal linebreak
+
+  setlocal spell spelllang=en_us
+  set complete+=s
+  highlight Normal guibg=#282828
+endfunction
+
+function! s:goyo_leave()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
+  set showmode
+  set showcmd
+  set scrolloff=5
+  Limelight!
+  " ...
+endfunction
+
+augroup GOYO
+    autocmd!
+    autocmd User GoyoEnter nested call <SID>goyo_enter()
+    autocmd User GoyoLeave call <SID>goyo_leave()
+    autocmd User GoyoLeave source ~/.vimrc
+augroup END
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd,text call pencil#init({'wrap': 'hard'})
+augroup END
+
+nnoremap <leader>w :Goyo<cr>
 lua << EOF
 require('Comment').setup()
 require('nvim-web-devicons').setup { default = true; }
