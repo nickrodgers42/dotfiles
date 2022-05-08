@@ -210,7 +210,6 @@ require('lualine').setup {
   }
 }
 
-require('nvim-lsp-installer').setup {}
 local cmp = require "cmp"
 local cmp_nvim_lsp = require "cmp_nvim_lsp"
 local lspconfig = require "lspconfig"
@@ -225,6 +224,11 @@ local servers = {
   "yamlls",
   "zk"
 }
+
+require('nvim-lsp-installer').setup({
+    ensure_installed = servers,
+    automatic_installation = true
+})
 
 cmp.setup({
   snippet = {
