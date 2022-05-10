@@ -66,6 +66,7 @@ Plug 'vim-python/python-syntax'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'preservim/vim-pencil'
+Plug 'vimwiki/vimwiki'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
