@@ -1,5 +1,5 @@
 mac:
-	make -f ./mac.mk all
+	make -f ./makefiles/mac.mk all
 
 ubuntu:
-	make -f ./ubuntu.mk all
+	make -f ./makefiles/ubuntu.mk all
