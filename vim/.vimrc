@@ -218,6 +218,7 @@ local lspconfig = require "lspconfig"
 -- Include the servers you want to have installed by default below
 local servers = {
   "bashls",
+  "gopls",
   "jedi_language_server",
   "pylsp",
   "tsserver",
