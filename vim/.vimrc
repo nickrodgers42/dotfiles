@@ -49,7 +49,7 @@ let mapleader=" "
 
 set guicursor=
 set termguicolors
-set listchars=space:⋅,tab:-->
+set listchars=space:⋅,tab:»⋅⋅
 set list
 
 call plug#begin('~/.vim/plugged')
