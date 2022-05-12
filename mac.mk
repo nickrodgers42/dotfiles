@@ -1,5 +1,9 @@
 NVIM_HOME := $(shell echo $${XDG_DATA_HOME:-$$HOME/.local/share})
 
+stow:
+	brew install stow
+
+
 vim-plug:
 	sh -c 'curl -fLo $(NVIM_HOME)/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -10,8 +14,8 @@ ripgrep:
 fd:
 	brew install fd
 
-
-INIT_FILE := $(HOME)/.config/nvim/init.nvim
+INIT_DIR := $(HOME)/.config/nvim/
+INIT_FILE := $(INIT_DIR)/init.vim
 
 define init_script
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -21,27 +25,35 @@ endef
 
 export init_script
 $(INIT_FILE):
+	mkdir -p $(INIT_DIR)
+	touch $(INIT_FILE)
 	echo "$$init_script" > $(INIT_FILE)
 
 
-vim: vim-plug ripgrep fd $(INIT_FILE)
-	brew install neovim
-	stow vim
-	# echo "alias vim=nvim" >> $(HOME)/.zshrc
+vim: stow vim-plug ripgrep fd $(INIT_FILE)
+	brew install neovim make
+	stow -t ~ vim
 	nvim +PlugInstall +qall
 
 
-tpm:
+tmux:
+	brew install tmux
+
+
+tpm: tmux
 	-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
-tmux: tpm
-	stow tmux
+tmux-conf: stow tpm
+	stow -t ~ tmux
+	tmux start-server
+	tmux new-session -d
 	~/.tmux/plugins/tpm/bin/install_plugins
+	tmux kill-server
 
 
-gitconfig:
-	stow git
+gitconfig: stow
+	stow --adopt -t ~ git
 
 
 all: gitconfig tmux vim
