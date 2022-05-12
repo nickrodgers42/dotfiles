@@ -5,6 +5,16 @@ A collection of dotfiles managed using GNU stow for symlinks
 
 ## Installation
 
+### On Mac
+
+* Run `make mac`
+
+### On Ubuntu
+
+* Run `make ubuntu`
+
+### Other Platforms
+
 1. Clone this repo
 1. Install GNU stow
 1. Call `stow <dir>` to install specific dotfiles
