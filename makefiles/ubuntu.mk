@@ -1,7 +1,7 @@
 NVIM_HOME := $(shell echo $${XDG_DATA_HOME:-$$HOME/.local/share})
 
 stow:
-	sudo apt-get install stow
+	sudo apt-get install -y stow
 
 vim-plug:
 	sh -c 'curl -fLo $(NVIM_HOME)/nvim/site/autoload/plug.vim --create-dirs \
@@ -12,7 +12,7 @@ ripgrep:
 	sudo dpkg -i ripgrep_13.0.0_amd64.deb
 
 fd:
-	sudo apt-get install fd-find
+	sudo apt-get install -y fd-find
 
 
 INIT_DIR := $(HOME)/.config/nvim/
@@ -39,11 +39,11 @@ vim: stow vim-plug ripgrep fd $(INIT_FILE)
 	nvim +PlugInstall +qall
 
 
-tmux:
-	sudo apt-get install tmux
+tmux-install:
+	sudo apt-get install -y tmux
 
 
-tpm: tmux
+tpm: tmux-install
 	-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
@@ -59,4 +59,4 @@ gitconfig: stow
 	stow -t ~ git
 
 
-all: gitconfig tmux vim
+all: gitconfig tmux-conf vim

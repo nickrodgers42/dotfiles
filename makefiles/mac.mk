@@ -36,11 +36,11 @@ vim: stow vim-plug ripgrep fd $(INIT_FILE)
 	nvim +PlugInstall +qall
 
 
-tmux:
+tmux-install:
 	brew install tmux
 
 
-tpm: tmux
+tpm: tmux-install
 	-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
@@ -56,4 +56,4 @@ gitconfig: stow
 	stow --adopt -t ~ git
 
 
-all: gitconfig tmux vim
+all: gitconfig tmux-conf vim
