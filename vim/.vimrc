@@ -43,7 +43,6 @@ set undofile
 
 set ttimeoutlen=100
 set updatetime=50
-map Y y$
 imap jj <Esc>
 let mapleader=" "
 
@@ -94,6 +93,8 @@ call plug#end()
 
 colorscheme gruvbox
 highlight Normal guibg=none
+
+nnoremap Y y$
 
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files({no_ignore=true})<cr>
 nnoremap <C-p> <cmd>lua require('telescope.builtin').find_files()<cr>
