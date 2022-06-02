@@ -48,7 +48,7 @@ let mapleader=" "
 
 set guicursor=
 set termguicolors
-set listchars=space:⋅,tab:»⋅⋅
+set listchars=space:⋅,tab:⋅⋅»
 set list
 
 call plug#begin('~/.vim/plugged')
@@ -65,6 +65,7 @@ Plug 'vim-python/python-syntax'
 Plug 'preservim/vim-pencil'
 Plug 'vimwiki/vimwiki'
 Plug 'mhinz/vim-startify'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
