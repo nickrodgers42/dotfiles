@@ -26,7 +26,6 @@ set hlsearch
 set smartcase
 set ignorecase
 set incsearch
-set nohlsearch
 
 set backspace=indent,eol,start
 set ruler
