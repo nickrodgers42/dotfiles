@@ -23,6 +23,7 @@ set scrolloff=8
 
 set wildmenu
 set showcmd
+set showmode
 
 set hlsearch
 set smartcase
@@ -47,6 +48,25 @@ set listchars=space:⋅,tab:⋅⋅»
 set list
 nnoremap Y y$
 
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+Plug 'easymotion/vim-easymotion'
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-commentary'
+
+set ideajoin
+
+map <C-P> <Action>(GotoFile)
+map <C-p> <Action>(SearchEverywhere)
+map <leader>e <Action>(FocusEditor)
+map <leader>d <Action>(Debug)
+map <leader>r <Action>(Run)
+map <leader>b <Action>(ToggleLineBreakpoint)
+map <C-c> <Action>(Stop)
+map <leader>t <Action>(ActivateTerminalToolWindow)
 
 "" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
 "" Map \r to the Reformat Code action
