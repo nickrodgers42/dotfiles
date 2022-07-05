@@ -1,0 +1,62 @@
+"" Source your .vimrc
+"source ~/.vimrc
+scriptencoding utf-8
+set encoding=utf-8
+syntax on
+
+set exrc
+set noerrorbells
+
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+set autoindent
+set smartindent
+set nostartofline
+
+set number relativenumber
+set nowrap
+set colorcolumn=80
+set signcolumn=yes
+set scrolloff=8
+
+set wildmenu
+set showcmd
+
+set hlsearch
+set smartcase
+set ignorecase
+set incsearch
+
+set backspace=indent,eol,start
+set ruler
+set laststatus=2
+set confirm
+set visualbell
+set t_vb=
+
+set ttimeoutlen=100
+set updatetime=50
+imap jj <Esc>
+let mapleader=" "
+
+set guicursor=
+set termguicolors
+set listchars=space:⋅,tab:⋅⋅»
+set list
+nnoremap Y y$
+
+
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)
+
+
+" Find more examples here: https://jb.gg/share-ideavimrc
