@@ -8,11 +8,14 @@ vim-plug:
 	sh -c 'curl -fLo $(NVIM_HOME)/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
+
 ripgrep:
 	brew install ripgrep
 
+
 fd:
 	brew install fd
+
 
 INIT_DIR := $(HOME)/.config/nvim/
 INIT_FILE := $(INIT_DIR)/init.vim
@@ -56,4 +59,8 @@ gitconfig: stow
 	stow --adopt -t ~ git
 
 
-all: gitconfig tmux-conf vim
+intellij: stow
+	stow -t ~ intellij
+
+
+all: gitconfig tmux-conf vim intellij
