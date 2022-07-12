@@ -192,10 +192,10 @@ let g:raccoon = [
 let g:startify_custom_header =
     \ 'startify#center(g:raccoon) + startify#center(startify#fortune#boxed())'
 
+
 lua << EOF
 require('Comment').setup()
 require('nvim-web-devicons').setup { default = true; }
-require('nvim-tree').setup {}
 require('telescope').setup()
 require('telescope').load_extension('fzf')
 require('lualine').setup {
@@ -203,6 +203,28 @@ require('lualine').setup {
     theme = 'gruvbox'
   }
 }
+
+require('nvim-tree').setup {
+    auto_reload_on_write = true,
+    open_on_setup = true,
+    open_on_setup_file = true,
+    open_on_tab = true,
+    ignore_buffer_on_setup = true,
+    renderer = {
+        group_empty = true,
+    },
+    update_focused_file = {
+        enable = true,
+    },
+    filesystem_watchers = {
+        enable = true
+    },
+    view = {
+        number = true,
+        relativenumber = true
+    }
+}
+
 
 local cmp = require "cmp"
 local cmp_nvim_lsp = require "cmp_nvim_lsp"
