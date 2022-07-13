@@ -65,6 +65,7 @@ Plug 'preservim/vim-pencil'
 Plug 'vimwiki/vimwiki'
 Plug 'mhinz/vim-startify'
 Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'mfussenegger/nvim-jdtls'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -234,6 +235,7 @@ local lspconfig = require "lspconfig"
 local servers = {
   "bashls",
   "gopls",
+  "jdtls",
   "jedi_language_server",
   "pylsp",
   "tsserver",
@@ -338,4 +340,59 @@ for _, name in ipairs(servers) do
     capabilities = capabilities
   }
 end
+
+jdtls_setup = function()
+    local home = os.getenv('HOME')
+    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+    local workspace_dir = home .. '/.java-workspace/' .. project_name
+    local handle = io.popen("uname")
+    local uname = handle:read("*a")
+    handle:close()
+    os_name = ""
+    if (uname == "Darwin") then
+        os_name = "mac"
+    else
+        os_name = "linux"
+    end
+    local handle = io.popen("ls " .. home .. "/.local/share/nvim/lsp_servers/jdtls/plugins/ | grep equinox.launcher_")
+    equinox_version = handle:read("*a")
+    equinox_version = string.gsub(equinox_version, "^%s*(.-)%s*$", "%1")
+    handle:close()
+    jar = home .. "/.local/share/nvim/lsp_servers/jdtls/plugins/" ..equinox_version
+
+    -- See https://github.com/mfussenegger/nvim-jdtls/blob/master/README.md
+    local config = {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = {
+            'java',
+            '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+            '-Dosgi.bundles.defaultStartLevel=4',
+            '-Declipse.product=org.eclipse.jdt.ls.core.product',
+            '-Dlog.protocol=true',
+            '-Dlog.level=ALL',
+            '-Xms1g',
+            '--add-modules=ALL-SYSTEM',
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+            '-jar', jar,
+            '-configuration', home ..'/.local/share/nvim/lsp_servers/jdtls/config_' .. os_name,
+            '-data', workspace_dir
+        },
+         -- root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+        settings = {
+            java = {
+            }
+        },
+        init_options = {
+            bundles = {}
+        },
+    }
+    require('jdtls').start_or_attach(config)
+end
 EOF
+
+augroup lsp
+    autocmd!
+    autocmd filetype java luado jdtls_setup()
+augroup end
