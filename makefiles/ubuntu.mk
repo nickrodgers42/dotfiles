@@ -18,7 +18,7 @@ fd:
 	sudo apt-get install -y fd-find
 
 
-INIT_DIR := $(HOME)/.config/nvim/
+INIT_DIR := $(HOME)/.config/nvim
 INIT_FILE := $(INIT_DIR)/init.vim
 
 define init_script
@@ -38,7 +38,7 @@ vim: stow vim-plug ripgrep fd $(INIT_FILE)
 	sudo apt-get install -y build-essential git
 	curl -L -o nvim-linux64.deb https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb
 	sudo apt install ./nvim-linux64.deb
-	stow -t ~ vim
+	stow -t ~ --ignore=ftplugin vim
 	nvim +PlugInstall +qall
 
 
@@ -66,4 +66,9 @@ intellij: stow
 	stow -t ~ intellij
 
 
-all: gitconfig tmux-conf vim intellij
+ftplugin: vim
+	mkdir -p $(INIT_DIR)/ftplugin
+	stow -d vim -t $(INIT_DIR)/ftplugin ftplugin
+
+
+all: gitconfig tmux-conf vim intellij ftplugin

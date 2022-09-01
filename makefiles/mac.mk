@@ -17,7 +17,7 @@ fd:
 	brew install fd
 
 
-INIT_DIR := $(HOME)/.config/nvim/
+INIT_DIR := $(HOME)/.config/nvim
 INIT_FILE := $(INIT_DIR)/init.vim
 
 define init_script
@@ -35,7 +35,7 @@ $(INIT_FILE):
 
 vim: stow vim-plug ripgrep fd $(INIT_FILE)
 	brew install neovim make
-	stow -t ~ vim
+	stow -t ~ --ignore=ftplugin vim
 	nvim +PlugInstall +qall
 
 
@@ -63,4 +63,9 @@ intellij: stow
 	stow -t ~ intellij
 
 
-all: gitconfig tmux-conf vim intellij
+ftplugin: vim
+	mkdir -p $(INIT_DIR)/ftplugin
+	stow -d vim -t $(INIT_DIR)/ftplugin ftplugin
+
+
+all: gitconfig tmux-conf vim intellij ftplugin
