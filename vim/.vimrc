@@ -43,6 +43,7 @@ set undofile
 set ttimeoutlen=100
 set updatetime=50
 imap jj <Esc>
+imap jk <Esc>
 let mapleader=" "
 
 set guicursor=
