@@ -60,4 +60,5 @@ plugins
 ### fonts
 
 * Comic Mono Font from https://github.com/dtinth/comic-mono-font
+* Monocraft Font from https://github.com/IdreesInc/Monocraft
 * Patched using [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
