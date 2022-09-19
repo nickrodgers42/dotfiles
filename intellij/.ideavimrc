@@ -69,8 +69,8 @@ nnoremap <leader>e :action ShowIntentionActions<CR>
 nnoremap <leader>R :action RunContextPopupGroup<CR>
 
 "" Terminal
-map <C-t> :action ActivateTerminalToolWindow<CR>
-map <Leader>t :action Terminal.OpenInTerminal<CR>
+map <Leader>t :action ActivateTerminalToolWindow<CR>
+map <C-t> :action Terminal.OpenInTerminal<CR>
 
 "" NERDTree
 nnoremap <leader>n :NERDTreeFocus<CR>
