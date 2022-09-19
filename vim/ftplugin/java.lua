@@ -29,7 +29,7 @@ function get_equinox_version()
 end
 
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-local workspace_dir = home .. '/.java-workspace' .. project_name
+local workspace_dir = home .. '/.java-workspace/' .. project_name
 local jar = jdtls_dir .. "plugins/" .. get_equinox_version()
 
 local config = {
