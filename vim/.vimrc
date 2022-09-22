@@ -67,6 +67,7 @@ Plug 'vimwiki/vimwiki'
 Plug 'mhinz/vim-startify'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mfussenegger/nvim-jdtls'
+Plug 'vim-test/vim-test'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -112,7 +113,14 @@ nnoremap <leader>n :NvimTreeFindFile<CR>
 
 let g:tmux_navigator_no_mappings = 1
 let g:python_highlight_all = 1
+let test#strategy = "neovim"
+let test#neovim#term_position = "botright 30"
 
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
@@ -141,6 +149,14 @@ augroup HTML_TAB
     autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
+
+function! SourceIfExists(file)
+  if filereadable(expand(a:file))
+    exe 'source' a:file
+  endif
+endfunction
+
+call SourceIfExists("~/.work.vim")
 
 " ============= Word Processing ===============
 function! WordProcessing()
