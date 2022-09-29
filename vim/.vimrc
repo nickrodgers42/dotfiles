@@ -62,7 +62,6 @@ Plug 'preservim/nerdcommenter'
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-python/python-syntax'
-Plug 'preservim/vim-pencil'
 Plug 'vimwiki/vimwiki'
 Plug 'mhinz/vim-startify'
 Plug 'lukas-reineke/indent-blankline.nvim'
@@ -157,38 +156,6 @@ function! SourceIfExists(file)
 endfunction
 
 call SourceIfExists("~/.work.vim")
-
-" ============= Word Processing ===============
-function! WordProcessing()
-  map j gj
-  map k gk
-  setlocal textwidth=80
-  setlocal wrap
-  setlocal linebreak
-  setlocal spell spelllang=en_us
-  setlocal formatoptions=a
-  set complete+=s
-  highlight Normal guibg=#282828
-endfunction
-
-function! ClearWordProcessing()
-    map j j
-    map k k
-    setlocal nowrap
-    setlocal nolinebreak
-    setlocal nospell
-    setlocal formatoptions=tcqj
-    set complete-=s
-    highlight Normal guibg=NONE
-endfunction
-
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd,text call pencil#init({'wrap': 'hard'})
-augroup END
-
-nnoremap <leader>wp :call WordProcessing()<cr>
-nnoremap <leader>cp :call ClearWordProcessing()<cr>
 
 let g:raccoon = [
     \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
