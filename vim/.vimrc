@@ -199,6 +199,9 @@ require('lualine').setup {
 
 require('nvim-tree').setup {
     auto_reload_on_write = true,
+    diagnostics = {
+        enable = true,
+    },
     renderer = {
         group_empty = true,
     },
@@ -209,6 +212,7 @@ require('nvim-tree').setup {
         enable = true
     },
     view = {
+        adaptive_size = true,
         number = true,
         relativenumber = true
     }
