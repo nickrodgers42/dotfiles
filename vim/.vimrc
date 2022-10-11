@@ -67,6 +67,7 @@ Plug 'mhinz/vim-startify'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'vim-test/vim-test'
+Plug 'preservim/vimux'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -112,8 +113,7 @@ nnoremap <leader>n :NvimTreeFindFile<CR>
 
 let g:tmux_navigator_no_mappings = 1
 let g:python_highlight_all = 1
-let test#strategy = "neovim"
-let test#neovim#term_position = "botright 30"
+let test#strategy = 'vimux'
 
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
