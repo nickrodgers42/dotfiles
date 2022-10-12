@@ -40,16 +40,20 @@ set nowritebackup
 set undodir=~/.vim/undodir
 set undofile
 
+set completeopt=menu,menuone,noselect
+
 set ttimeoutlen=100
 set updatetime=50
 imap jj <Esc>
 imap jk <Esc>
+nnoremap Y y$
 let mapleader=" "
 
 set guicursor=
 set termguicolors
 set listchars=space:⋅,tab:⋅⋅»
 set list
+set mouse=
 
 call plug#begin('~/.vim/plugged')
 " General Plugins
@@ -96,9 +100,35 @@ call plug#end()
 
 colorscheme gruvbox
 highlight Normal guibg=none
+filetype plugin on
 
-nnoremap Y y$
+" let g:nerddefaultalign = 'left'
+" let g:nerdspacedelims = 1
+let g:python_highlight_all = 1
+let g:tmux_navigator_no_mappings = 1
+let g:vimwiki_listsyms = ' ○◐●✓'
+let test#strategy = 'vimux'
+let g:raccoon = [
+    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⢠⣾⣷⣦⣄⠀⠀⣀⣀⣀⣀⣀⣀⠀⠀⣠⣴⣾⣷⡄⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⣿⣿⣿⣿⠟⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠻⣿⣿⣿⣿⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⣿⣿⡿⠋⠀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠙⢿⣿⣿⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⣿⠏⣠⣾⣿⣿⣿⣿⣷⣦⣴⣾⣿⣿⣿⣿⣷⣄⠹⣿⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⢁⣼⣿⠿⠛⠉⠉⠛⢿⣿⣿⡿⠛⠉⠉⠛⠿⣿⣧⡈⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⣠⡿⠛⠁⠀⣀⣤⣤⣀⠈⢿⡿⠁⣀⣤⣤⣀⠀⠈⠛⢿⣄⠀⠀⠀⠀',
+    \ '⠀⠀⢀⣼⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣧⡀⠀⠀',
+    \ '⠀⠰⣿⡏⠀⠀⠀⠀⠀⠀⣀⣤⣄⠀⢤⡤⠀⣠⣤⣀⠀⠀⠀⠀⠀⠀⢹⣿⠆⠀',
+    \ '⠀⠀⠀⠈⠢⣀⠀⠀⣴⣿⣿⡿⢿⣷⠀⠀⣾⡿⢿⣿⣿⣦⠀⠀⣀⠔⠁⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⠀⠉⠙⢿⣿⣿⣷⣤⣤⣴⣦⣤⣤⣾⣿⣿⡿⠋⠉⠀⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⠿⠟⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'
+\]
+let g:startify_custom_header =
+    \ 'startify#center(g:raccoon) + startify#center(startify#fortune#boxed())'
 
+" Telescope remaps
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files({no_ignore=true})<cr>
 nnoremap <C-p> <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
@@ -107,30 +137,24 @@ nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 nnoremap <leader>fv <cmd>lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>
 nnoremap gr <cmd> lua require('telescope.builtin').lsp_references()<cr>
 
+" NvimTree remaps
 nnoremap <C-n> :NvimTreeToggle<CR>
 nnoremap <leader>r :NvimTreeRefresh<CR>
 nnoremap <leader>n :NvimTreeFindFile<CR>
 
-let g:tmux_navigator_no_mappings = 1
-let g:python_highlight_all = 1
-let test#strategy = 'vimux'
-
+" Test Remaps
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
+
+" Tmux Remaps
 nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 " nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
-
-filetype plugin on
-let g:nerdspacedelims = 1
-let g:nerddefaultalign = 'left'
-
-set completeopt=menu,menuone,noselect
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 augroup HIGHLIGHT_WHITESPACE
@@ -156,26 +180,6 @@ function! SourceIfExists(file)
 endfunction
 
 call SourceIfExists("~/.work.vim")
-
-let g:raccoon = [
-    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⢠⣾⣷⣦⣄⠀⠀⣀⣀⣀⣀⣀⣀⠀⠀⣠⣴⣾⣷⡄⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⣿⣿⣿⣿⠟⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠻⣿⣿⣿⣿⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⣿⣿⡿⠋⠀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠙⢿⣿⣿⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⣿⠏⣠⣾⣿⣿⣿⣿⣷⣦⣴⣾⣿⣿⣿⣿⣷⣄⠹⣿⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⢁⣼⣿⠿⠛⠉⠉⠛⢿⣿⣿⡿⠛⠉⠉⠛⠿⣿⣧⡈⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⣠⡿⠛⠁⠀⣀⣤⣤⣀⠈⢿⡿⠁⣀⣤⣤⣀⠀⠈⠛⢿⣄⠀⠀⠀⠀',
-    \ '⠀⠀⢀⣼⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣧⡀⠀⠀',
-    \ '⠀⠰⣿⡏⠀⠀⠀⠀⠀⠀⣀⣤⣄⠀⢤⡤⠀⣠⣤⣀⠀⠀⠀⠀⠀⠀⢹⣿⠆⠀',
-    \ '⠀⠀⠀⠈⠢⣀⠀⠀⣴⣿⣿⡿⢿⣷⠀⠀⣾⡿⢿⣿⣿⣦⠀⠀⣀⠔⠁⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⠀⠉⠙⢿⣿⣿⣷⣤⣤⣴⣦⣤⣤⣾⣿⣿⡿⠋⠉⠀⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⠿⠟⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'
-\]
-let g:startify_custom_header =
-    \ 'startify#center(g:raccoon) + startify#center(startify#fortune#boxed())'
 
 
 lua << EOF
