@@ -49,7 +49,7 @@ local config = {
         '-configuration', jdtls_dir .. "/config_" .. get_os(),
         '-data', workspace_dir
     },
-    -- root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+    root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
     settings = {
         java = {}
     },
