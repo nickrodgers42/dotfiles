@@ -121,6 +121,7 @@ vim.g.python_highligh_all = 1
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.vimwiki_listsyms = ' ○◐●✓'
 vim.g["test#strategy"] = 'vimux'
+vim.g.VimuxOrientation = "h"
 vim.g.raccoon = {
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
@@ -142,6 +143,9 @@ vim.g.startify_custom_header = [[
     startify#center(g:raccoon) + startify#center(startify#fortune#boxed())]]
 
 local map = vim.api.nvim_set_keymap
+
+-- Format json
+map('n', '<leader>fj', ':%!jq<CR>', { noremap = true })
 
 -- Telescope remaps
 map('n', '<leader>ff', [[<cmd>lua require('telescope.builtin').find_files({no_ignore=true})<CR>]], { noremap  = true })
