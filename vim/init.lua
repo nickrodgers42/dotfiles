@@ -246,7 +246,6 @@ require('nvim-tree').setup {
 
 
 local cmp = require "cmp"
-local cmp_nvim_lsp = require "cmp_nvim_lsp"
 local lspconfig = require "lspconfig"
 
 -- Include the servers you want to have installed by default below
@@ -352,8 +351,14 @@ on_attach = function(client, bufnr)
   buf_map(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local capabilities = cmp_nvim_lsp.update_capabilities(
-    vim.lsp.protocol.make_client_capabilities())
+
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
+cmp_nvim_lsp.setup {
+    sources = {
+        name = 'nvim_lsp'
+    }
+}
+local capabilities = cmp_nvim_lsp.default_capabilities()
 
 for _, name in ipairs(servers) do
   lspconfig[name].setup {
