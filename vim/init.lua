@@ -85,7 +85,7 @@ require('packer').startup(function(use)
   -- Telescope
   use 'nvim-lua/plenary.nvim'
   use 'nvim-telescope/telescope.nvim'
-  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use { 'nvim-treesitter/nvim-treesitter', run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
   -- nvim-tree
