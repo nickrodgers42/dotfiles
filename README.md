@@ -1,7 +1,8 @@
+<img src="./assets/readme/header.png" width=720>
+
 # Dotfiles
 
-A collection of dotfiles managed using GNU stow for symlinks
-
+A repository to manage dotfiles and configurations
 
 ## Installation
 
@@ -19,34 +20,16 @@ A collection of dotfiles managed using GNU stow for symlinks
 1. Install GNU stow
 1. Call `stow <dir>` to install specific dotfiles
 
-## Dependencies
-
-
-### Required
-
-* GNU Stow
-
 
 -------------------------------------------------------------------------------
 
-## Tool-specific Dependencies
+## Installing Dependencies
 
+* Install GNU Stow via your package manager
 
-### vim
+### neovim
 
-This .vimrc uses Neovim-specific syntax and features. To use the .vimrc in
-Neovim (from `:help nvim-from-vim`):
-
-In `~/.config/nvim/init.vim`:
-
-```vim
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-source ~/.vimrc
-```
-
-* [vim-plug](https://github.com/junegunn/vim-plug) - run `:PlugInstall to
-install plugins`
+* Run `:PackerSync` to install neovim plugins
 * [ripgrep](https://github.com/BurntSushi/ripgrep)
 * [fd](https://github.com/sharkdp/fd)
 
@@ -57,8 +40,18 @@ install plugins`
 plugins
 
 
-### fonts
+-------------------------------------------------------------------------------
+
+## Credits
+
+### Fonts
 
 * Comic Mono Font from https://github.com/dtinth/comic-mono-font
 * Monocraft Font from https://github.com/IdreesInc/Monocraft
 * Patched using [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
+
+
+### Wallpapers
+
+* All wallpapers were downloaded from the internet for personal use and I do
+  not own the rights to any of the wallpapers in this repository
