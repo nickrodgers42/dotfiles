@@ -106,6 +106,9 @@ require('packer').startup(function(use)
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/vim-vsnip'
 
+  -- nvim-dap
+  use 'mfussenegger/nvim-dap'
+
   if packer_bootstrap then
     require('packer').sync()
   end
@@ -174,6 +177,18 @@ map('n', '<C-j>', ':TmuxNavigateDown<CR>', { silent = true })
 map('n', '<C-k>', ':TmuxNavigateUp<CR>', { silent = true })
 map('n', '<C-l>', ':TmuxNavigateRight<CR>', { silent = true })
 -- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+-- nvim-dap remaps
+map('n', '<F5>', [[lua require'dap'.continue()<CR>]], { noremap = true, silent = true})
+map('n', '<F10>', [[lua require'dap'.step_over()<CR>]], { noremap = true, silent = true})
+map('n', '<F11>', [[lua require'dap'.step_into()<CR>]], { noremap = true, silent = true})
+map('n', '<F12>', [[lua require'dap'.step_out()<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>b', [[:lua require('dap').toggle_breakpoint()<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>B', [[:lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true})
+vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
 
 vim.cmd([[
 highlight ExtraWhitespace ctermbg=red guibg=red
