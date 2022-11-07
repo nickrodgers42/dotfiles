@@ -198,14 +198,11 @@ vim.fn.sign_define('DapStopped', {text='➡️', texthl='', linehl='', numhl=''}
 vim.fn.sign_define('DapBreakpointRejected', {text='❌', texthl='', linehl='', numhl=''})
 
 vim.cmd([[
-highlight ExtraWhitespace ctermbg=red guibg=red
 augroup HIGHLIGHT_WHITESPACE
     autocmd!
-    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-    match ExtraWhitespace /\s\+$/
-    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+    autocmd BufWinEnter * if &ft != 'help' && expand('%p') != '' | match Error /\s\+$/ | endif
+    autocmd InsertEnter * if &ft != 'help' && expand('%p') != '' | match Error /\s\+\%#\@<!$/ | endif
+    autocmd InsertLeave * if &ft != 'help' && expand('%p') != '' | match Error /\s\+$/ | endif
     autocmd BufWinLeave * call clearmatches()
 augroup END
 
