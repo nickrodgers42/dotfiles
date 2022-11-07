@@ -107,7 +107,10 @@ require('packer').startup(function(use)
   use 'hrsh7th/vim-vsnip'
 
   -- nvim-dap
+  use 'jayp0521/mason-nvim-dap.nvim'
   use 'mfussenegger/nvim-dap'
+  use 'theHamsta/nvim-dap-virtual-text'
+  use 'rcarriga/nvim-dap-ui'
 
   if packer_bootstrap then
     require('packer').sync()
@@ -179,16 +182,22 @@ map('n', '<C-l>', ':TmuxNavigateRight<CR>', { silent = true })
 -- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
 -- nvim-dap remaps
-map('n', '<F5>', [[lua require'dap'.continue()<CR>]], { noremap = true, silent = true})
-map('n', '<F10>', [[lua require'dap'.step_over()<CR>]], { noremap = true, silent = true})
-map('n', '<F11>', [[lua require'dap'.step_into()<CR>]], { noremap = true, silent = true})
-map('n', '<F12>', [[lua require'dap'.step_out()<CR>]], { noremap = true, silent = true})
-map('n', '<Leader>b', [[:lua require('dap').toggle_breakpoint()<CR>]], { noremap = true, silent = true})
-map('n', '<Leader>B', [[:lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]], { noremap = true, silent = true})
-map('n', '<Leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]], { noremap = true, silent = true})
-map('n', '<Leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true})
-map('n', '<Leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true})
+map('n', '<Leader>dd', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>dn', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>di', [[:lua require'dap'.step_into()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>dp', [[:lua require'dap'.step_out()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>b', [[:lua require('dap').toggle_breakpoint()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>B', [[:lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>dq', [[:lua require'dap'.terminate()<CR>]], { noremap = true, silent = true })
+map('n', '<Leader>do', [[:lua require('dapui').toggle()<CR>]], { noremap = true, silent = true })
 vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpointCondition', {text='⭕', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapLogPoint', {text='✏️', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapStopped', {text='➡️', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpointRejected', {text='❌', texthl='', linehl='', numhl=''})
 
 vim.cmd([[
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -224,6 +233,8 @@ require('Comment').setup()
 require('nvim-web-devicons').setup { default = true; }
 require('telescope').setup()
 require('telescope').load_extension('fzf')
+require('nvim-dap-virtual-text').setup()
+require('dapui').setup()
 require('lualine').setup {
   options = {
     theme = 'gruvbox',
@@ -342,9 +353,7 @@ map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
 map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 map('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-on_attach = function(client, bufnr)
+MapLspCommands = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -366,6 +375,10 @@ on_attach = function(client, bufnr)
   buf_map(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
+local on_attach = function(client, bufnr)
+    MapLspCommands(client, bufnr)
+end
+
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 cmp_nvim_lsp.setup {
@@ -381,6 +394,7 @@ for _, name in ipairs(servers) do
     capabilities = capabilities
   }
 end
+
 lspconfig.sumneko_lua.setup {
     on_attach = on_attach,
     capabilities = capabilities,
@@ -392,3 +406,12 @@ lspconfig.sumneko_lua.setup {
         }
     }
 }
+
+local debuggers = {
+    "java-debug-adapter",
+    "java-test"
+}
+
+require("mason-nvim-dap").setup({
+    ensure_installed = debuggers
+})
