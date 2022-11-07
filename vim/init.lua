@@ -74,7 +74,6 @@ require('packer').startup(function(use)
   use 'preservim/nerdcommenter'
   use 'psliwka/vim-smoothie'
   use 'tpope/vim-fugitive'
-  use 'vim-python/python-syntax'
   use 'vimwiki/vimwiki'
   use 'mhinz/vim-startify'
   use 'lukas-reineke/indent-blankline.nvim'
@@ -123,7 +122,6 @@ highlight Normal guibg=none
 filetype plugin on
 ]])
 
-vim.g.python_highligh_all = 1
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.vimwiki_listsyms = ' ○◐●✓'
 vim.g["test#strategy"] = 'vimux'
@@ -414,4 +412,20 @@ local debuggers = {
 
 require("mason-nvim-dap").setup({
     ensure_installed = debuggers
+})
+
+local parsers = {
+    "bash",
+    "java",
+    "javascript",
+    "kotlin",
+    "lua",
+    "python",
+    "typescript",
+}
+require('nvim-treesitter.configs').setup({
+    ensure_installed = parsers,
+    highlight = {
+        enable = true,
+    }
 })
