@@ -14,6 +14,7 @@ vim.opt.wrap = false
 vim.opt.colorcolumn = "80"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 8
+vim.opt.cursorline = true
 
 vim.opt.wildmenu = true
 vim.opt.showcmd = true
@@ -80,6 +81,7 @@ require('packer').startup(function(use)
   use 'mfussenegger/nvim-jdtls'
   use 'vim-test/vim-test'
   use 'preservim/vimux'
+  use { 'catppuccin/nvim', as = 'catppuccin' }
 
   -- Telescope
   use 'nvim-lua/plenary.nvim'
@@ -117,11 +119,51 @@ require('packer').startup(function(use)
 end)
 
 vim.cmd([[
-colorscheme gruvbox
+" colorscheme gruvbox
 highlight Normal guibg=none
 filetype plugin on
 ]])
 
+vim.cmd.colorscheme "catppuccin"
+
+require("catppuccin").setup({
+    flavour = "frappe",
+    transparent_background = true,
+    integrations = {
+        dap = {
+            enabled = true,
+            enable_ui = true, -- enable nvim-dap-ui
+        },
+        nvimtree = true,
+        telescope = true,
+        treesitter = true,
+        mason = true,
+        gitgutter = true,
+        vimwiki = true
+    },
+    custom_highlights = function(colors)
+        return {
+            SignColumn = { fg = colors.overlay1 },
+            Comment = { fg = colors.overlay1 },
+            LineNr = { fg = colors.overlay1 },
+            VertSplit = {
+                bg = colors.surface2,
+                fg = colors.surface2
+            },
+            NvimTreeVertSplit = {
+                bg = colors.surface2,
+                fg = colors.surface2
+            }
+        }
+    end
+})
+vim.cmd([[
+highlight Normal guibg=none
+]])
+
+
+vim.g.indent_blankline_use_treesitter = true
+vim.g.indent_blankline_bufname_exclude = {''}
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.vimwiki_listsyms = ' ○◐●✓'
 vim.g["test#strategy"] = 'vimux'
@@ -236,7 +278,7 @@ require('nvim-dap-virtual-text').setup()
 require('dapui').setup()
 require('lualine').setup {
   options = {
-    theme = 'gruvbox',
+    theme = 'catppuccin',
   },
   sections = {
     lualine_c = {
