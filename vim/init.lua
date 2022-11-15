@@ -278,7 +278,6 @@ local servers = {
   "bashls",
   "gopls",
   "jdtls",
-  "jedi_language_server",
   "pylsp",
   "sumneko_lua",
   "tsserver",
@@ -401,6 +400,23 @@ lspconfig.sumneko_lua.setup {
         Lua = {
             diagnostics = {
                 globals = { 'vim' }
+            }
+        }
+    }
+}
+lspconfig.pylsp.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+        pylsp = {
+            plugins = {
+                pycodestyle = {
+                    ignore = {},
+                    maxLineLength = 120,
+                },
+                rope_autoimport = {
+                    enabled = true
+                }
             }
         }
     }
