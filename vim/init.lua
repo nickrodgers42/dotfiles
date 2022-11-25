@@ -188,6 +188,8 @@ vim.g.raccoon = {
 }
 vim.g.startify_custom_header = [[
     startify#center(g:raccoon) + startify#center(startify#fortune#boxed())]]
+vim.g.startify_change_to_dir = 0
+vim.g.startify_change_to_vcs_root = 1
 
 local map = vim.api.nvim_set_keymap
 
