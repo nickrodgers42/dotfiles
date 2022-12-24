@@ -328,6 +328,7 @@ local servers = {
     "gopls",
     "jdtls",
     "pylsp",
+    "smithy_ls",
     "sumneko_lua",
     "tsserver",
     "vimls",
