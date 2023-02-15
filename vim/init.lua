@@ -481,6 +481,7 @@ require("mason-nvim-dap").setup({
     ensure_installed = debuggers
 })
 
+vim.cmd([[au BufRead,BufNewFile *.smithy		setfiletype smithy]])
 local parsers = {
     "bash",
     "java",
@@ -489,6 +490,7 @@ local parsers = {
     "lua",
     "python",
     "typescript",
+    "smithy",
 }
 require('nvim-treesitter.configs').setup({
     ensure_installed = parsers,
