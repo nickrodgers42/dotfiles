@@ -4,11 +4,6 @@ stow:
 	brew install stow
 
 
-vim-plug:
-	sh -c 'curl -fLo $(NVIM_HOME)/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-
 ripgrep:
 	brew install ripgrep
 
@@ -20,7 +15,7 @@ fd:
 INIT_DIR := $(HOME)/.config/nvim
 
 
-vim: stow vim-plug ripgrep fd
+vim: stow ripgrep fd
 	brew install neovim make
 	stow -t ~ --ignore=ftplugin vim
 	mkdir -p $(INIT_DIR)

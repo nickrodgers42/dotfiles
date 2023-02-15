@@ -4,11 +4,6 @@ stow:
 	sudo apt-get install -y stow
 
 
-vim-plug:
-	sh -c 'curl -fLo $(NVIM_HOME)/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-
 ripgrep:
 	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
 	sudo dpkg -i ripgrep_13.0.0_amd64.deb
@@ -20,7 +15,7 @@ fd:
 
 INIT_DIR := $(HOME)/.config/nvim
 
-vim: stow vim-plug ripgrep fd
+vim: stow ripgrep fd
 	sudo apt-get install -y build-essential git
 	curl -L -o nvim-linux64.deb https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb
 	sudo apt install ./nvim-linux64.deb
