@@ -51,6 +51,7 @@ znap source marlonrichert/zsh-autocomplete
 znap source zsh-users/zsh-autosuggestions
 znap source zsh-users/zsh-syntax-highlighting
 
+zstyle ':autocomplete:*' insert-unambiguous yes
 # User configuration
 bindkey '^P' up-line-or-search
 bindkey '^N' down-line-or-search
