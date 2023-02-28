@@ -47,12 +47,10 @@ plugins=(git aws)
 source $ZSH/oh-my-zsh.sh
 
 # Znap plugins
-znap source marlonrichert/zsh-autocomplete
-znap source zsh-users/zsh-autosuggestions
 znap source zsh-users/zsh-syntax-highlighting
 
-zstyle ':autocomplete:*' insert-unambiguous yes
 # User configuration
+set -o vi
 bindkey '^P' up-line-or-search
 bindkey '^N' down-line-or-search
 
@@ -66,7 +64,8 @@ complete -C '/usr/local/bin/aws_completer' aws
 
 export PATH="$HOME/bin:$PATH"
 
-set -o vi
+
+
 export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
 
 export NVM_DIR="$HOME/.config/nvm"
