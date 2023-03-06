@@ -69,7 +69,6 @@ require('packer').startup(function(use)
     -- General Plugins
     use 'airblade/vim-gitgutter'
     use 'christoomey/vim-tmux-navigator'
-    use 'gruvbox-community/gruvbox'
     use 'numToStr/Comment.nvim'
     use 'nvim-lualine/lualine.nvim'
     use 'preservim/nerdcommenter'
@@ -82,6 +81,7 @@ require('packer').startup(function(use)
     use 'vim-test/vim-test'
     use 'preservim/vimux'
     use { 'catppuccin/nvim', as = 'catppuccin' }
+    use 'lbrayner/vim-rzip'
 
     -- Telescope
     use 'nvim-lua/plenary.nvim'
@@ -120,7 +120,6 @@ require('packer').startup(function(use)
 end)
 
 vim.cmd([[
-" colorscheme gruvbox
 highlight Normal guibg=none
 filetype plugin on
 ]])
@@ -286,6 +285,8 @@ require('dapui').setup()
 require('lualine').setup {
     options = {
         theme = 'catppuccin',
+        section_separators = { left = '', right = '' },
+        component_separators = { left = '', right = '' }
     },
     sections = {
         lualine_c = {
@@ -329,7 +330,7 @@ local servers = {
     "jdtls",
     "pylsp",
     "smithy_ls",
-    "sumneko_lua",
+    "lua_ls",
     "tsserver",
     "vimls",
     "yamlls",
@@ -443,7 +444,7 @@ for _, name in ipairs(servers) do
     }
 end
 
-lspconfig.sumneko_lua.setup {
+lspconfig.lua_ls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
