@@ -23,7 +23,6 @@ vim.opt.hlsearch = true
 vim.opt.smartcase = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
-
 vim.opt.backspace = "indent,eol,start"
 vim.opt.ruler = true
 vim.opt.laststatus = 2
@@ -119,11 +118,6 @@ require('packer').startup(function(use)
     end
 end)
 
-vim.cmd([[
-highlight Normal guibg=none
-filetype plugin on
-]])
-
 vim.cmd.colorscheme "catppuccin"
 
 require("catppuccin").setup({
@@ -157,10 +151,11 @@ require("catppuccin").setup({
         }
     end
 })
+
 vim.cmd([[
+filetype plugin on
 highlight Normal guibg=none
 ]])
-
 
 vim.g.indent_blankline_use_treesitter = true
 vim.g.indent_blankline_bufname_exclude = { '' }
@@ -196,19 +191,18 @@ local map = vim.api.nvim_set_keymap
 map('n', '<leader>fj', ':%!jq<CR>', { noremap = true })
 
 -- Telescope remaps
-map('n', '<leader>ff', [[<cmd>lua require('telescope.builtin').find_files({no_ignore=true})<CR>]], { noremap = true })
-map('n', '<C-p>', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], { noremap = true })
-map('n', '<leader>fg', [[<cmd>lua require('telescope.builtin').live_grep()<cr>]], { noremap = true })
-map('n', '<leader>fb', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true })
-map('n', '<leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<cr>]], { noremap = true })
+map('n', '<leader>ff', [[:lua require('telescope.builtin').find_files({no_ignore=true})<CR>]], { noremap = true })
+map('n', '<C-p>', [[:lua require('telescope.builtin').find_files()<cr>]], { noremap = true })
+map('n', '<leader>fg', [[:lua require('telescope.builtin').live_grep()<cr>]], { noremap = true })
+map('n', '<leader>fb', [[:lua require('telescope.builtin').buffers()<cr>]], { noremap = true })
+map('n', '<leader>fh', [[:lua require('telescope.builtin').help_tags()<cr>]], { noremap = true })
 map('n', '<leader>fv',
-    [[<cmd>lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>]],
+    [[:lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>]],
     { noremap = true })
-map('n', 'gr', [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], { noremap = true })
+map('n', 'gr', [[:lua require('telescope.builtin').lsp_references()<cr>]], { noremap = true })
 
 -- NvimTree remaps
-map('n', '<C-n>', '<cmd>NvimTreeToggle<CR>', { noremap = true })
-map('n', '<leader>r', ':NvimTreeRefresh<CR>', { noremap = true })
+map('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true })
 map('n', '<leader>n', ':NvimTreeFindFile<CR>', { noremap = true })
 
 -- Test Remaps
@@ -226,19 +220,19 @@ map('n', '<C-l>', ':TmuxNavigateRight<CR>', { silent = true })
 -- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
 -- nvim-dap remaps
-map('n', '<Leader>dd', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>dn', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>di', [[:lua require'dap'.step_into()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>dp', [[:lua require'dap'.step_out()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>b', [[:lua require('dap').toggle_breakpoint()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>B', [[:lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]],
+map('n', '<leader>dd', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>dn', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>di', [[:lua require'dap'.step_into()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>dp', [[:lua require'dap'.step_out()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>b',  [[:lua require'dap'.toggle_breakpoint()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>B',  [[:lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]],
     { noremap = true, silent = true })
-map('n', '<Leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]],
+map('n', '<leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]],
     { noremap = true, silent = true })
-map('n', '<Leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>dq', [[:lua require'dap'.terminate()<CR>]], { noremap = true, silent = true })
-map('n', '<Leader>do', [[:lua require('dapui').toggle()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>dq', [[:lua require'dap'.terminate()<CR>]], { noremap = true, silent = true })
+map('n', '<leader>do', [[:lua require'dapui'.toggle()<CR>]], { noremap = true, silent = true })
 vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '⭕', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '✏️', texthl = '', linehl = '', numhl = '' })
@@ -314,6 +308,9 @@ require('nvim-tree').setup {
     },
     view = {
         adaptive_size = true,
+        width = {
+            max = 60
+        },
         number = true,
         relativenumber = true
     }
@@ -328,6 +325,7 @@ local servers = {
     "bashls",
     "gopls",
     "jdtls",
+    "kotlin_language_server",
     "pylsp",
     "smithy_ls",
     "lua_ls",
@@ -397,10 +395,10 @@ cmp.setup.cmdline(":", {
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap = true, silent = true }
-map('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-map('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+map('n', '<leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
+map('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
+map('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
+map('n', '<leader>q', ':lua vim.diagnostic.setloclist()<CR>', opts)
 
 MapLspCommands = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
@@ -409,19 +407,19 @@ MapLspCommands = function(client, bufnr)
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local buf_map = vim.api.nvim_buf_set_keymap
-    buf_map(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_map(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_map(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    buf_map(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_map(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-    --vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_map(bufnr, 'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format { async = true }<CR>', opts)
+    buf_map(bufnr, 'n', 'gD', ':lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_map(bufnr, 'n', 'gd', ':lua vim.lsp.buf.definition()<CR>', opts)
+    buf_map(bufnr, 'n', 'K', ':lua vim.lsp.buf.hover()<CR>', opts)
+    buf_map(bufnr, 'n', 'gi', ':lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_map(bufnr, 'n', 'gk', ':lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>wa', ':lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>wr', ':lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>wl', ':lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>D', ':lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>rn', ':lua vim.lsp.buf.rename()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>ca', ':lua vim.lsp.buf.code_action()<CR>', opts)
+    --vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', ':lua vim.lsp.buf.references()<CR>', opts)
+    buf_map(bufnr, 'n', '<leader>f', ':lua vim.lsp.buf.format { async = true }<CR>', opts)
 end
 
 local on_attach = function(client, bufnr)
