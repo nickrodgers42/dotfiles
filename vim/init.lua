@@ -186,53 +186,63 @@ vim.g.startify_change_to_dir = 0
 vim.g.startify_change_to_vcs_root = 1
 
 local map = vim.api.nvim_set_keymap
+local nmap = function(mapping, command, opts)
+    if (opts == nil) then
+        opts = {}
+    end
+    if (opts['noremap'] == nil) then
+        opts['noremap'] = true
+    end
+    if (opts['silent'] == nil) then
+        opts['silent'] = true
+    end
+    map('n', mapping, command, opts)
+end
 
 -- Format json
-map('n', '<leader>fj', ':%!jq<CR>', { noremap = true })
+nmap('<leader>fj', ':%!jq<CR>')
 
 -- Telescope remaps
-map('n', '<leader>ff', [[:lua require('telescope.builtin').find_files({no_ignore=true})<CR>]], { noremap = true })
-map('n', '<C-p>', [[:lua require('telescope.builtin').find_files()<cr>]], { noremap = true })
-map('n', '<leader>fg', [[:lua require('telescope.builtin').live_grep()<cr>]], { noremap = true })
-map('n', '<leader>fb', [[:lua require('telescope.builtin').buffers()<cr>]], { noremap = true })
-map('n', '<leader>fh', [[:lua require('telescope.builtin').help_tags()<cr>]], { noremap = true })
-map('n', '<leader>fv',
-    [[:lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>]],
-    { noremap = true })
-map('n', 'gr', [[:lua require('telescope.builtin').lsp_references()<cr>]], { noremap = true })
+nmap('<leader>ff', [[:lua require('telescope.builtin').find_files({no_ignore=true})<CR>]])
+nmap('<C-p>', [[:lua require('telescope.builtin').find_files()<cr>]])
+nmap('<leader>fg', [[:lua require('telescope.builtin').live_grep()<cr>]])
+nmap('<leader>fb', [[:lua require('telescope.builtin').buffers()<cr>]])
+nmap('<leader>fh', [[:lua require('telescope.builtin').help_tags()<cr>]])
+nmap('<leader>fv',
+    [[:lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>]])
+nmap('gr', [[:lua require('telescope.builtin').lsp_references()<cr>]])
 
 -- NvimTree remaps
-map('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true })
-map('n', '<leader>n', ':NvimTreeFindFile<CR>', { noremap = true })
+nmap('<C-n>', ':NvimTreeToggle<CR>')
+-- map('n', '<C-n>', ':NvimTreeToggle<CR>')
+nmap('<leader>n', ':NvimTreeFindFile<CR>')
 
 -- Test Remaps
-map('n', '<leader>t', ':TestNearest<CR>', { silent = true })
-map('n', '<leader>T', ':TestFile<CR>', { silent = true })
-map('n', '<leader>a', ':TestSuite<CR>', { silent = true })
-map('n', '<leader>l', ':TestLast<CR>', { silent = true })
-map('n', '<leader>g', ':TestVisit<CR>', { silent = true })
+nmap('<leader>t', ':TestNearest<CR>')
+nmap('<leader>T', ':TestFile<CR>')
+nmap('<leader>a', ':TestSuite<CR>')
+nmap('<leader>l', ':TestLast<CR>')
+nmap('<leader>g', ':TestVisit<CR>')
 
 -- Tmux Remaps
-map('n', '<C-h>', ':TmuxNavigateLeft<CR>', { silent = true })
-map('n', '<C-j>', ':TmuxNavigateDown<CR>', { silent = true })
-map('n', '<C-k>', ':TmuxNavigateUp<CR>', { silent = true })
-map('n', '<C-l>', ':TmuxNavigateRight<CR>', { silent = true })
+nmap('<C-h>', ':TmuxNavigateLeft<CR>')
+nmap('<C-j>', ':TmuxNavigateDown<CR>')
+nmap('<C-k>', ':TmuxNavigateUp<CR>')
+nmap('<C-l>', ':TmuxNavigateRight<CR>')
 -- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
 -- nvim-dap remaps
-map('n', '<leader>dd', [[:lua require'dap'.continue()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>dn', [[:lua require'dap'.step_over()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>di', [[:lua require'dap'.step_into()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>dp', [[:lua require'dap'.step_out()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>b',  [[:lua require'dap'.toggle_breakpoint()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>B',  [[:lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]],
-    { noremap = true, silent = true })
-map('n', '<leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]],
-    { noremap = true, silent = true })
-map('n', '<leader>dr', [[:lua require'dap'.repl.open()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>dl', [[:lua require'dap'.run_last()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>dq', [[:lua require'dap'.terminate()<CR>]], { noremap = true, silent = true })
-map('n', '<leader>do', [[:lua require'dapui'.toggle()<CR>]], { noremap = true, silent = true })
+nmap('<leader>dd', [[:lua require'dap'.continue()<CR>]])
+nmap('<leader>dn', [[:lua require'dap'.step_over()<CR>]])
+nmap('<leader>di', [[:lua require'dap'.step_into()<CR>]])
+nmap('<leader>dp', [[:lua require'dap'.step_out()<CR>]])
+nmap('<leader>b',  [[:lua require'dap'.toggle_breakpoint()<CR>]])
+nmap('<leader>B',  [[:lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]])
+nmap('<leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]])
+nmap('<leader>dr', [[:lua require'dap'.repl.open()<CR>]])
+nmap('<leader>dl', [[:lua require'dap'.run_last()<CR>]])
+nmap('<leader>dq', [[:lua require'dap'.terminate()<CR>]])
+nmap('<leader>do', [[:lua require'dapui'.toggle()<CR>]])
 vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '⭕', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '✏️', texthl = '', linehl = '', numhl = '' })
@@ -395,10 +405,10 @@ cmp.setup.cmdline(":", {
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap = true, silent = true }
-map('n', '<leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
-map('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
-map('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
-map('n', '<leader>q', ':lua vim.diagnostic.setloclist()<CR>', opts)
+nmap('<leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
+nmap('[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
+nmap(']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
+nmap('<leader>q', ':lua vim.diagnostic.setloclist()<CR>', opts)
 
 MapLspCommands = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
