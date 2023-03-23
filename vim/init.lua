@@ -1,53 +1,51 @@
-vim.opt.errorbells = false
-
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.expandtab = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.startofline = false
-
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.wrap = false
-vim.opt.colorcolumn = "80"
-vim.opt.signcolumn = "yes"
-vim.opt.scrolloff = 8
-vim.opt.cursorline = true
-
-vim.opt.wildmenu = true
-vim.opt.showcmd = true
-
-vim.opt.hlsearch = true
-vim.opt.smartcase = true
-vim.opt.ignorecase = true
-vim.opt.incsearch = true
-vim.opt.backspace = "indent,eol,start"
-vim.opt.ruler = true
-vim.opt.laststatus = 2
-vim.opt.confirm = true
-vim.opt.visualbell = true
-
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.writebackup = false
-vim.opt.undofile = true
-
-vim.opt.ttimeoutlen = 100
-vim.opt.updatetime = 50
+local vim_opts = {
+    autoindent = true,
+    backspace = "indent,eol,start",
+    backup = false,
+    colorcolumn = "80",
+    confirm = true,
+    cursorline = true,
+    errorbells = false,
+    expandtab = true,
+    hlsearch = true,
+    ignorecase = true,
+    incsearch = true,
+    laststatus = 2,
+    list = true,
+    listchars = { space = '⋅', tab = '⋅⋅»' },
+    number = true,
+    relativenumber = true,
+    ruler = true,
+    scrolloff = 8,
+    shiftwidth = 4,
+    showcmd = true,
+    signcolumn = "yes",
+    smartcase = true,
+    smartindent = true,
+    softtabstop = 4,
+    startofline = false,
+    swapfile = false,
+    tabstop = 4,
+    termguicolors = true,
+    ttimeoutlen = 100,
+    undofile = true,
+    updatetime = 50,
+    visualbell = true,
+    wildmenu = true,
+    wrap = false,
+    writebackup = false,
+}
+for k, v in pairs(vim_opts) do
+    vim.opt[k] = v
+end
+-- Tables can't store nil values
+vim.opt.guicursor = nil
+vim.opt.mouse = nil
 
 vim.g.mapleader = " "
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true })
-
-vim.opt.guicursor = nil
-vim.opt.termguicolors = true
-vim.opt.listchars = { space = '⋅', tab = '⋅⋅»' }
-vim.opt.list = true
-vim.opt.mouse = nil
-
 
 local ensure_packer = function()
     local fn = vim.fn
@@ -66,7 +64,6 @@ require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- General Plugins
-    use 'airblade/vim-gitgutter'
     use 'christoomey/vim-tmux-navigator'
     use 'numToStr/Comment.nvim'
     use 'nvim-lualine/lualine.nvim'
@@ -81,6 +78,8 @@ require('packer').startup(function(use)
     use 'preservim/vimux'
     use { 'catppuccin/nvim', as = 'catppuccin' }
     use 'lbrayner/vim-rzip'
+    use 'rcarriga/nvim-notify'
+    use 'lewis6991/gitsigns.nvim'
 
     -- Telescope
     use 'nvim-lua/plenary.nvim'
@@ -118,7 +117,6 @@ require('packer').startup(function(use)
     end
 end)
 
-vim.cmd.colorscheme "catppuccin"
 
 require("catppuccin").setup({
     flavour = "frappe",
@@ -152,6 +150,7 @@ require("catppuccin").setup({
     end
 })
 
+vim.cmd.colorscheme "catppuccin"
 vim.cmd([[
 filetype plugin on
 highlight Normal guibg=none
@@ -167,8 +166,8 @@ vim.g.raccoon = {
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⢠⣾⣷⣦⣄⠀⠀⣀⣀⣀⣀⣀⣀⠀⠀⣠⣴⣾⣷⡄⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⣿⣿⣿⣿⠟⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠻⣿⣿⣿⣿⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⣿⣿⡿⠋⠀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠙⢿⣿⣿⠀⠀⠀⠀⠀',
+    '⠀⠀⠀⠀⠀⣿⠀⠀⣿⠟⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠻⣿⠀⠀⣿⠀⠀⠀⠀⠀',
+    '⠀⠀⠀⠀⠀⣿⠀⣾⠋⠀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠙⣷⠀⣿⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⣿⠏⣠⣾⣿⣿⣿⣿⣷⣦⣴⣾⣿⣿⣿⣿⣷⣄⠹⣿⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⢁⣼⣿⠿⠛⠉⠉⠛⢿⣿⣿⡿⠛⠉⠉⠛⠿⣿⣧⡈⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⣠⡿⠛⠁⠀⣀⣤⣤⣀⠈⢿⡿⠁⣀⣤⣤⣀⠀⠈⠛⢿⣄⠀⠀⠀⠀',
@@ -187,62 +186,52 @@ vim.g.startify_change_to_vcs_root = 1
 
 local map = vim.api.nvim_set_keymap
 local nmap = function(mapping, command, opts)
-    if (opts == nil) then
-        opts = {}
-    end
-    if (opts['noremap'] == nil) then
-        opts['noremap'] = true
-    end
-    if (opts['silent'] == nil) then
-        opts['silent'] = true
-    end
-    map('n', mapping, command, opts)
+    opts = opts or { noremap = true, silent = true }
+    map('n', mapping, ':' .. command .. '<CR>', opts)
 end
 
 -- Format json
-nmap('<leader>fj', ':%!jq<CR>')
+nmap('<leader>fj', '%!jq')
 
 -- Telescope remaps
-nmap('<leader>ff', [[:lua require('telescope.builtin').find_files({no_ignore=true})<CR>]])
-nmap('<C-p>', [[:lua require('telescope.builtin').find_files()<cr>]])
-nmap('<leader>fg', [[:lua require('telescope.builtin').live_grep()<cr>]])
-nmap('<leader>fb', [[:lua require('telescope.builtin').buffers()<cr>]])
-nmap('<leader>fh', [[:lua require('telescope.builtin').help_tags()<cr>]])
+nmap('<leader>ff', 'lua require("telescope.builtin").find_files({no_ignore=true})')
+nmap('<C-p>', 'lua require("telescope.builtin").find_files()')
+nmap('<leader>fg', 'lua require("telescope.builtin").live_grep()')
+nmap('<leader>fb', 'lua require("telescope.builtin").buffers()')
+nmap('<leader>fh', 'lua require("telescope.builtin").help_tags()')
 nmap('<leader>fv',
-    [[:lua require('telescope.builtin').find_files({search_dirs={"~/dotfiles"}, hidden=true})<cr>]])
-nmap('gr', [[:lua require('telescope.builtin').lsp_references()<cr>]])
+    'lua require("telescope.builtin").find_files({search_dirs={"~/dotfiles"}, hidden=true})')
+nmap('gr', 'lua require("telescope.builtin").lsp_references()')
 
 -- NvimTree remaps
-nmap('<C-n>', ':NvimTreeToggle<CR>')
--- map('n', '<C-n>', ':NvimTreeToggle<CR>')
-nmap('<leader>n', ':NvimTreeFindFile<CR>')
+nmap('<C-n>', 'NvimTreeToggle')
+nmap('<leader>n', 'NvimTreeFindFile')
 
 -- Test Remaps
-nmap('<leader>t', ':TestNearest<CR>')
-nmap('<leader>T', ':TestFile<CR>')
-nmap('<leader>a', ':TestSuite<CR>')
-nmap('<leader>l', ':TestLast<CR>')
-nmap('<leader>g', ':TestVisit<CR>')
+nmap('<leader>t', 'TestNearest')
+nmap('<leader>T', 'TestFile')
+nmap('<leader>a', 'TestSuite')
+nmap('<leader>l', 'TestLast')
+nmap('<leader>g', 'TestVisit')
 
 -- Tmux Remaps
-nmap('<C-h>', ':TmuxNavigateLeft<CR>')
-nmap('<C-j>', ':TmuxNavigateDown<CR>')
-nmap('<C-k>', ':TmuxNavigateUp<CR>')
-nmap('<C-l>', ':TmuxNavigateRight<CR>')
--- nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+nmap('<C-h>', 'TmuxNavigateLeft')
+nmap('<C-j>', 'TmuxNavigateDown')
+nmap('<C-k>', 'TmuxNavigateUp')
+nmap('<C-l>', 'TmuxNavigateRight')
 
 -- nvim-dap remaps
-nmap('<leader>dd', [[:lua require'dap'.continue()<CR>]])
-nmap('<leader>dn', [[:lua require'dap'.step_over()<CR>]])
-nmap('<leader>di', [[:lua require'dap'.step_into()<CR>]])
-nmap('<leader>dp', [[:lua require'dap'.step_out()<CR>]])
-nmap('<leader>b',  [[:lua require'dap'.toggle_breakpoint()<CR>]])
-nmap('<leader>B',  [[:lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>]])
-nmap('<leader>lp', [[:lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>]])
-nmap('<leader>dr', [[:lua require'dap'.repl.open()<CR>]])
-nmap('<leader>dl', [[:lua require'dap'.run_last()<CR>]])
-nmap('<leader>dq', [[:lua require'dap'.terminate()<CR>]])
-nmap('<leader>do', [[:lua require'dapui'.toggle()<CR>]])
+nmap('<leader>dd', 'lua require("dap").continue()')
+nmap('<leader>dn', 'lua require("dap").step_over()')
+nmap('<leader>di', 'lua require("dap").step_into()')
+nmap('<leader>dp', 'lua require("dap").step_out()')
+nmap('<leader>b', 'lua require("dap").toggle_breakpoint()')
+nmap('<leader>B', 'lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))')
+nmap('<leader>lp', 'ua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))')
+nmap('<leader>dr', 'lua require("dap").repl.open()')
+nmap('<leader>dl', 'lua require("dap").run_last()')
+nmap('<leader>dq', 'lua require("dap").terminate()')
+nmap('<leader>do', 'lua require("dapui").toggle()')
 vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '⭕', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '✏️', texthl = '', linehl = '', numhl = '' })
@@ -267,7 +256,6 @@ augroup HTML_TAB
     autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
-
 ]])
 
 function SourceIfExists(filename)
@@ -280,12 +268,24 @@ end
 
 SourceIfExists(os.getenv("HOME") .. "/.work.lua")
 
-require('Comment').setup()
-require('nvim-web-devicons').setup { default = true; }
-require('telescope').setup()
+local default_setup = {
+    'Comment',
+    'dapui',
+    'gitsigns',
+    'mason',
+    'nvim-dap-virtual-text',
+    'telescope',
+}
+for _, package in ipairs(default_setup) do
+    require(package).setup()
+end
+
+require('nvim-web-devicons').setup { default = true, }
 require('telescope').load_extension('fzf')
-require('nvim-dap-virtual-text').setup()
-require('dapui').setup()
+require("notify").setup({
+    background_colour = "#000000",
+})
+vim.notify = require('notify')
 require('lualine').setup {
     options = {
         theme = 'catppuccin',
@@ -345,7 +345,6 @@ local servers = {
     "zk"
 }
 
-require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = servers,
     automatic_installation = true
@@ -404,11 +403,15 @@ cmp.setup.cmdline(":", {
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap = true, silent = true }
-nmap('<leader>e', ':lua vim.diagnostic.open_float()<CR>', opts)
-nmap('[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
-nmap(']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
-nmap('<leader>q', ':lua vim.diagnostic.setloclist()<CR>', opts)
+nmap('<leader>e', 'lua vim.diagnostic.open_float()')
+nmap('[d', 'lua vim.diagnostic.goto_prev()')
+nmap(']d', 'lua vim.diagnostic.goto_next()')
+nmap('<leader>q', 'lua vim.diagnostic.setloclist()')
+
+local buf_map = function(bufnr, mapping, command, opts)
+    opts = opts or { noremap = true, silent = true }
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', mapping, ':' .. command .. '<CR>', opts)
+end
 
 MapLspCommands = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
@@ -416,20 +419,18 @@ MapLspCommands = function(client, bufnr)
 
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local buf_map = vim.api.nvim_buf_set_keymap
-    buf_map(bufnr, 'n', 'gD', ':lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_map(bufnr, 'n', 'gd', ':lua vim.lsp.buf.definition()<CR>', opts)
-    buf_map(bufnr, 'n', 'K', ':lua vim.lsp.buf.hover()<CR>', opts)
-    buf_map(bufnr, 'n', 'gi', ':lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_map(bufnr, 'n', 'gk', ':lua vim.lsp.buf.signature_help()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>wa', ':lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>wr', ':lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>wl', ':lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>D', ':lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>rn', ':lua vim.lsp.buf.rename()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>ca', ':lua vim.lsp.buf.code_action()<CR>', opts)
-    --vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', ':lua vim.lsp.buf.references()<CR>', opts)
-    buf_map(bufnr, 'n', '<leader>f', ':lua vim.lsp.buf.format { async = true }<CR>', opts)
+    buf_map(bufnr, 'gD', 'lua vim.lsp.buf.declaration()')
+    buf_map(bufnr, 'gd', 'lua vim.lsp.buf.definition()')
+    buf_map(bufnr, 'K', 'lua vim.lsp.buf.hover()')
+    buf_map(bufnr, 'gi', 'lua vim.lsp.buf.implementation()')
+    buf_map(bufnr, 'gk', 'lua vim.lsp.buf.signature_help()')
+    buf_map(bufnr, '<leader>wa', 'lua vim.lsp.buf.add_workspace_folder()')
+    buf_map(bufnr, '<leader>wr', 'lua vim.lsp.buf.remove_workspace_folder()')
+    buf_map(bufnr, '<leader>wl', 'lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))')
+    buf_map(bufnr, '<leader>D', 'lua vim.lsp.buf.type_definition()')
+    buf_map(bufnr, '<leader>rn', 'lua vim.lsp.buf.rename()')
+    buf_map(bufnr, '<leader>ca', 'lua vim.lsp.buf.code_action()')
+    buf_map(bufnr, '<leader>f', 'lua vim.lsp.buf.format { async = true }')
 end
 
 local on_attach = function(client, bufnr)
@@ -459,7 +460,20 @@ lspconfig.lua_ls.setup {
         Lua = {
             diagnostics = {
                 globals = { 'vim' }
-            }
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
+            telemetry = {
+                enable = false,
+            },
+            format = {
+                enable = true,
+                defaultConfig = {
+                    indent_style = "space",
+                    indent_size = "2",
+                },
+            },
         }
     }
 }
