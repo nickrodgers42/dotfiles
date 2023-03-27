@@ -12,7 +12,7 @@ source ~/Git/zsh-snap/znap.zsh  # Start Znap
 
 source ~/.path
 
-export ZSH="/Users/nrdg/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
