@@ -14,6 +14,7 @@ source ~/.path
 
 export ZSH="$HOME/.oh-my-zsh"
 
+unsetopt extended_glob
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
@@ -63,8 +64,6 @@ source ~/.functions
 complete -C '/usr/local/bin/aws_completer' aws
 
 export PATH="$HOME/bin:$PATH"
-
-
 
 export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
 
