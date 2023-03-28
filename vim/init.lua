@@ -80,6 +80,7 @@ require('packer').startup(function(use)
     use 'lbrayner/vim-rzip'
     use 'rcarriga/nvim-notify'
     use 'lewis6991/gitsigns.nvim'
+    use 'stevearc/aerial.nvim'
 
     -- Telescope
     use 'nvim-lua/plenary.nvim'
@@ -195,6 +196,7 @@ nmap('<leader>fj', '%!jq')
 
 -- Telescope remaps
 nmap('<leader>ff', 'lua require("telescope.builtin").find_files({no_ignore=true})')
+nmap('<leader>fa', 'lua require("telescope").extensions.aerial.aerial()')
 nmap('<C-p>', 'lua require("telescope.builtin").find_files()')
 nmap('<leader>fg', 'lua require("telescope.builtin").live_grep()')
 nmap('<leader>fb', 'lua require("telescope.builtin").buffers()')
@@ -207,12 +209,14 @@ nmap('gr', 'lua require("telescope.builtin").lsp_references()')
 nmap('<C-n>', 'NvimTreeToggle')
 nmap('<leader>n', 'NvimTreeFindFile')
 
+nmap('<leader>a', 'AerialToggle!')
+
 -- Test Remaps
-nmap('<leader>t', 'TestNearest')
-nmap('<leader>T', 'TestFile')
-nmap('<leader>a', 'TestSuite')
-nmap('<leader>l', 'TestLast')
-nmap('<leader>g', 'TestVisit')
+nmap('<leader>tt', 'TestNearest')
+nmap('<leader>tT', 'TestFile')
+nmap('<leader>ta', 'TestSuite')
+nmap('<leader>tl', 'TestLast')
+nmap('<leader>tg', 'TestVisit')
 
 -- Tmux Remaps
 nmap('<C-h>', 'TmuxNavigateLeft')
@@ -282,6 +286,7 @@ end
 
 require('nvim-web-devicons').setup { default = true, }
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('aerial')
 require("notify").setup({
     background_colour = "#000000",
 })
@@ -298,9 +303,23 @@ require('lualine').setup {
                 'filename',
                 path = 1
             }
-        }
+        },
+        lualine_x = { "aerial" },
+        lualine_y = { "encoding", 'fileformat', 'filetype' },
+        lualine_z = { 'progress', 'location' }
     }
 }
+
+require('aerial').setup({
+    layout = {
+        width = 30,
+        win_opts = {
+            number = true,
+            relativenumber = true
+        }
+    },
+    show_guides = true
+})
 
 require('nvim-tree').setup {
     auto_reload_on_write = true,
