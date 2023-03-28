@@ -47,91 +47,102 @@ vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true })
 
-local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-        vim.cmd [[packadd packer.nvim]]
-        return true
-    end
-    return false
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_bootstrap = ensure_packer()
-
-require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
-
+local plugins = {
     -- General Plugins
-    use 'christoomey/vim-tmux-navigator'
-    use 'numToStr/Comment.nvim'
-    use 'nvim-lualine/lualine.nvim'
-    use 'preservim/nerdcommenter'
-    use 'psliwka/vim-smoothie'
-    use 'tpope/vim-fugitive'
-    use 'vimwiki/vimwiki'
-    use 'mhinz/vim-startify'
-    use 'lukas-reineke/indent-blankline.nvim'
-    use 'mfussenegger/nvim-jdtls'
-    use 'vim-test/vim-test'
-    use 'preservim/vimux'
-    use { 'catppuccin/nvim', as = 'catppuccin' }
-    use 'lbrayner/vim-rzip'
-    use 'rcarriga/nvim-notify'
-    use 'lewis6991/gitsigns.nvim'
-    use 'stevearc/aerial.nvim'
+    'christoomey/vim-tmux-navigator',
+    'numToStr/Comment.nvim',
+    'nvim-lualine/lualine.nvim',
+    'preservim/nerdcommenter',
+    'psliwka/vim-smoothie',
+    'tpope/vim-fugitive',
+    'vimwiki/vimwiki',
+    'mhinz/vim-startify',
+    'lukas-reineke/indent-blankline.nvim',
+    'mfussenegger/nvim-jdtls',
+    'vim-test/vim-test',
+    'preservim/vimux',
+    {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.cmd([[colorscheme catppuccin]])
+        end,
+    },
+    'lbrayner/vim-rzip',
+    'rcarriga/nvim-notify',
+    'lewis6991/gitsigns.nvim',
+    'stevearc/aerial.nvim',
+    'nmac427/guess-indent.nvim',
 
     -- Telescope
-    use 'nvim-lua/plenary.nvim'
-    use 'nvim-telescope/telescope.nvim'
-    use { 'nvim-treesitter/nvim-treesitter',
-        run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope.nvim',
+    {
+        'nvim-treesitter/nvim-treesitter',
+        build = ":TSUpdate"
+    },
+    {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make'
+    },
 
     -- nvim-tree
-    use 'kyazdani42/nvim-web-devicons'
-    use 'kyazdani42/nvim-tree.lua'
+    'kyazdani42/nvim-web-devicons',
+    'kyazdani42/nvim-tree.lua',
 
     -- lsp stuff
-    use 'neovim/nvim-lspconfig'
-    use 'williamboman/mason.nvim'
-    use 'williamboman/mason-lspconfig.nvim'
+    'neovim/nvim-lspconfig',
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
 
     -- nvim-cmp
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-cmdline'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/vim-vsnip'
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/vim-vsnip',
 
     -- nvim-dap
-    use 'jayp0521/mason-nvim-dap.nvim'
-    use 'mfussenegger/nvim-dap'
-    use 'theHamsta/nvim-dap-virtual-text'
-    use 'rcarriga/nvim-dap-ui'
+    'jayp0521/mason-nvim-dap.nvim',
+    'mfussenegger/nvim-dap',
+    'theHamsta/nvim-dap-virtual-text',
+    'rcarriga/nvim-dap-ui',
+}
+require('lazy').setup(plugins)
 
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
-
-
+require('nvim-web-devicons').setup { default = true, }
 require("catppuccin").setup({
     flavour = "frappe",
     transparent_background = true,
     integrations = {
+        aerial = true,
         dap = {
             enabled = true,
             enable_ui = true, -- enable nvim-dap-ui
         },
+        gitgutter = true,
+        mason = true,
+        notify = true,
         nvimtree = true,
         telescope = true,
         treesitter = true,
-        mason = true,
-        gitgutter = true,
         vimwiki = true
     },
     custom_highlights = function(colors)
@@ -276,6 +287,7 @@ local default_setup = {
     'Comment',
     'dapui',
     'gitsigns',
+    'guess-indent',
     'mason',
     'nvim-dap-virtual-text',
     'telescope',
@@ -284,7 +296,6 @@ for _, package in ipairs(default_setup) do
     require(package).setup()
 end
 
-require('nvim-web-devicons').setup { default = true, }
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('aerial')
 require("notify").setup({
@@ -432,7 +443,7 @@ local buf_map = function(bufnr, mapping, command, opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', mapping, ':' .. command .. '<CR>', opts)
 end
 
-MapLspCommands = function(client, bufnr)
+MapLspCommands = function(_, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
