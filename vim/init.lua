@@ -61,9 +61,6 @@ vim.opt.guicursor = nil
 vim.opt.mouse = nil
 
 vim.g.mapleader = " "
-vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
-vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
-vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -145,6 +142,66 @@ local plugins = {
 }
 require('lazy').setup(plugins)
 
+local default_setup = {
+    'Comment',
+    'dapui',
+    'gitsigns',
+    'guess-indent',
+    'mason',
+    'nvim-dap-virtual-text',
+    'telescope',
+}
+for _, package in ipairs(default_setup) do
+    require(package).setup()
+end
+
+
+local servers = {
+    "bashls",
+    "gopls",
+    "jdtls",
+    "kotlin_language_server",
+    "pylsp",
+    "smithy_ls",
+    "lua_ls",
+    "tsserver",
+    "vimls",
+    "yamlls",
+    "zk"
+}
+
+require("mason-lspconfig").setup({
+    ensure_installed = servers,
+    automatic_installation = true
+})
+
+
+local parsers = {
+    "bash",
+    "help",
+    "java",
+    "javascript",
+    "kotlin",
+    "lua",
+    "python",
+    "typescript",
+    "smithy",
+}
+require('nvim-treesitter.configs').setup({
+    ensure_installed = parsers,
+    highlight = {
+        enable = true,
+    }
+})
+
+local debuggers = {
+    "java-debug-adapter",
+    "java-test"
+}
+require("mason-nvim-dap").setup({
+    ensure_installed = debuggers
+})
+
 require('nvim-web-devicons').setup { default = true, }
 require("catppuccin").setup({
     flavour = "frappe",
@@ -156,6 +213,10 @@ require("catppuccin").setup({
             enable_ui = true, -- enable nvim-dap-ui
         },
         gitgutter = true,
+        indent_blankline = {
+            enabled = true,
+            colored_indent_levels = true
+        },
         mason = true,
         notify = true,
         nvimtree = true,
@@ -186,8 +247,6 @@ filetype plugin on
 highlight Normal guibg=none
 ]])
 
-vim.g.indent_blankline_use_treesitter = true
-vim.g.indent_blankline_bufname_exclude = { '' }
 vim.g.tmux_navigator_no_mappings = 1
 vim.g.vimwiki_listsyms = ' ○◐●✓'
 vim.g["test#strategy"] = 'vimux'
@@ -198,6 +257,10 @@ local nmap = function(mapping, command, opts)
     opts = opts or { noremap = true, silent = true }
     map('n', mapping, ':' .. command .. '<CR>', opts)
 end
+
+vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
+vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true })
 
 -- Format json
 nmap('<leader>fj', '%!jq')
@@ -280,25 +343,20 @@ end
 
 SourceIfExists(os.getenv("HOME") .. "/.work.lua")
 
-local default_setup = {
-    'Comment',
-    'dapui',
-    'gitsigns',
-    'guess-indent',
-    'mason',
-    'nvim-dap-virtual-text',
-    'telescope',
-}
-for _, package in ipairs(default_setup) do
-    require(package).setup()
-end
-
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('aerial')
+
 require("notify").setup({
     background_colour = "#000000",
 })
 vim.notify = require('notify')
+
+require("indent_blankline").setup {
+    show_current_context = true,
+    use_treesitter = true,
+    bufname_exclude = { '' }
+}
+
 require('lualine').setup {
     options = {
         theme = 'catppuccin',
@@ -358,25 +416,6 @@ local cmp = require "cmp"
 local lspconfig = require "lspconfig"
 
 -- Include the servers you want to have installed by default below
-local servers = {
-    "bashls",
-    "gopls",
-    "jdtls",
-    "kotlin_language_server",
-    "pylsp",
-    "smithy_ls",
-    "lua_ls",
-    "tsserver",
-    "vimls",
-    "yamlls",
-    "zk"
-}
-
-require("mason-lspconfig").setup({
-    ensure_installed = servers,
-    automatic_installation = true
-})
-
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -522,32 +561,7 @@ lspconfig.pylsp.setup {
     }
 }
 
-local debuggers = {
-    "java-debug-adapter",
-    "java-test"
-}
-
-require("mason-nvim-dap").setup({
-    ensure_installed = debuggers
-})
-
 vim.cmd([[au BufRead,BufNewFile *.smithy		setfiletype smithy]])
-local parsers = {
-    "bash",
-    "java",
-    "javascript",
-    "kotlin",
-    "lua",
-    "python",
-    "typescript",
-    "smithy",
-}
-require('nvim-treesitter.configs').setup({
-    ensure_installed = parsers,
-    highlight = {
-        enable = true,
-    }
-})
 
 vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
 local function configureAlpha()
