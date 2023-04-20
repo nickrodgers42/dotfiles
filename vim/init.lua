@@ -103,6 +103,7 @@ local plugins = {
     'stevearc/aerial.nvim',
     'nmac427/guess-indent.nvim',
     'goolord/alpha-nvim',
+    'github/copilot.vim',
 
     -- Telescope
     'nvim-lua/plenary.nvim',
@@ -307,6 +308,7 @@ nmap('<leader>dr', 'lua require("dap").repl.open()')
 nmap('<leader>dl', 'lua require("dap").run_last()')
 nmap('<leader>dq', 'lua require("dap").terminate()')
 nmap('<leader>do', 'lua require("dapui").toggle()')
+
 vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '⭕', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '✏️', texthl = '', linehl = '', numhl = '' })
@@ -434,7 +436,18 @@ cmp.setup({
             c = cmp.mapping.close(),
         }),
         ["<CR>"] = cmp.mapping.confirm(),
-        ["<Tab>"] = cmp.mapping.confirm({ select = true })
+        ["<Tab>"] = cmp.mapping(
+            function(fallback)
+                local copilot_keys = vim.fn["copilot#Accept"]()
+                if cmp.visible() then
+                    cmp.confirm({ select = true })
+                elseif copilot_keys ~= "" and type(copilot_keys) == "string" then
+                    vim.api.nvim_feedkeys(copilot_keys, "n", true)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }
+        ),
     },
     sources = cmp.config.sources({
         { name = "nvim_lsp" },
