@@ -41,6 +41,7 @@ local vim_opts = {
     smartcase = true,
     smartindent = true,
     softtabstop = 4,
+    spelllang = "en_us",
     startofline = false,
     swapfile = false,
     tabstop = 4,
@@ -77,17 +78,25 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
     -- General Plugins
-    'christoomey/vim-tmux-navigator',
     'numToStr/Comment.nvim',
+    'stevearc/aerial.nvim',
+    'goolord/alpha-nvim',
+    'famiu/bufdelete.nvim',
+    'github/copilot.vim',
+    'lewis6991/gitsigns.nvim',
+    'nmac427/guess-indent.nvim',
+    'lukas-reineke/indent-blankline.nvim',
+    'onsails/lspkind.nvim',
     'nvim-lualine/lualine.nvim',
     'preservim/nerdcommenter',
-    'psliwka/vim-smoothie',
-    'tpope/vim-fugitive',
-    'vimwiki/vimwiki',
-    'lukas-reineke/indent-blankline.nvim',
     'mfussenegger/nvim-jdtls',
+    'rcarriga/nvim-notify',
+    'tpope/vim-fugitive',
+    'psliwka/vim-smoothie',
     'vim-test/vim-test',
+    'christoomey/vim-tmux-navigator',
     'preservim/vimux',
+    'vimwiki/vimwiki',
     {
         'catppuccin/nvim',
         name = 'catppuccin',
@@ -97,13 +106,13 @@ local plugins = {
             vim.cmd([[colorscheme catppuccin]])
         end,
     },
-    'lbrayner/vim-rzip',
-    'rcarriga/nvim-notify',
-    'lewis6991/gitsigns.nvim',
-    'stevearc/aerial.nvim',
-    'nmac427/guess-indent.nvim',
-    'goolord/alpha-nvim',
-    'github/copilot.vim',
+    {
+        "folke/which-key.nvim",
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+    },
 
     -- Telescope
     'nvim-lua/plenary.nvim',
@@ -151,6 +160,7 @@ local default_setup = {
     'mason',
     'nvim-dap-virtual-text',
     'telescope',
+    'which-key',
 }
 for _, package in ipairs(default_setup) do
     require(package).setup()
@@ -179,14 +189,14 @@ require("mason-lspconfig").setup({
 
 local parsers = {
     "bash",
-    "help",
     "java",
     "javascript",
     "kotlin",
     "lua",
     "python",
-    "typescript",
     "smithy",
+    "typescript",
+    "vimdoc",
 }
 require('nvim-treesitter.configs').setup({
     ensure_installed = parsers,
@@ -416,9 +426,17 @@ require('nvim-tree').setup {
 
 local cmp = require "cmp"
 local lspconfig = require "lspconfig"
+local lspkind = require('lspkind')
 
 -- Include the servers you want to have installed by default below
 cmp.setup({
+    formatting = {
+        format = lspkind.cmp_format({
+            mode = 'symbol_text',
+            maxwidth = 60,
+            ellipsis_char = '...',
+        })
+    },
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
