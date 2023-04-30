@@ -82,6 +82,7 @@ local plugins = {
     'stevearc/aerial.nvim',
     'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
+    'saadparwaiz1/cmp_luasnip',
     'github/copilot.vim',
     'lewis6991/gitsigns.nvim',
     'nmac427/guess-indent.nvim',
@@ -112,6 +113,10 @@ local plugins = {
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end,
+    },
+    {
+        'L3MON4D3/LuaSnip',
+        build = "make install_jsregexp"
     },
 
     -- Telescope
@@ -202,6 +207,7 @@ require('nvim-treesitter.configs').setup({
     ensure_installed = parsers,
     highlight = {
         enable = true,
+        additional_vim_regex_highlighting = true,
     }
 })
 
@@ -219,6 +225,7 @@ require("catppuccin").setup({
     transparent_background = true,
     integrations = {
         aerial = true,
+        cmp = true,
         dap = {
             enabled = true,
             enable_ui = true, -- enable nvim-dap-ui
@@ -233,7 +240,9 @@ require("catppuccin").setup({
         nvimtree = true,
         telescope = true,
         treesitter = true,
-        vimwiki = true
+        treesitter_context = true,
+        vimwiki = true,
+        which_key = true,
     },
     custom_highlights = function(colors)
         return {
@@ -439,7 +448,7 @@ cmp.setup({
     },
     snippet = {
         expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
+            require('luasnip').lsp_expand(args.body)
         end,
     },
     mapping = {
@@ -469,7 +478,7 @@ cmp.setup({
     },
     sources = cmp.config.sources({
         { name = "nvim_lsp" },
-        { name = "vsnip" }
+        { name = "luasnip" }
     }, {
         { name = "buffer" },
     }),
