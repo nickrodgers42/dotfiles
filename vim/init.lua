@@ -83,7 +83,8 @@ local plugins = {
     'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
     'saadparwaiz1/cmp_luasnip',
-    'github/copilot.vim',
+    'zbirenbaum/copilot.lua',
+    'zbirenbaum/copilot-cmp',
     'lewis6991/gitsigns.nvim',
     'nmac427/guess-indent.nvim',
     'lukas-reineke/indent-blankline.nvim',
@@ -159,6 +160,7 @@ require('lazy').setup(plugins)
 
 local default_setup = {
     'Comment',
+    'copilot_cmp',
     'dapui',
     'gitsigns',
     'guess-indent',
@@ -433,6 +435,17 @@ require('nvim-tree').setup {
 }
 
 
+local has_words_before = function()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+end
+
+require("copilot").setup({
+    suggestion = { enabled = false },
+    panel = { enabled = false },
+})
+
 local cmp = require "cmp"
 local lspconfig = require "lspconfig"
 local lspkind = require('lspkind')
@@ -444,6 +457,7 @@ cmp.setup({
             mode = 'symbol_text',
             maxwidth = 60,
             ellipsis_char = '...',
+            symbol_map = { Copilot = '' }
         })
     },
     snippet = {
@@ -462,21 +476,20 @@ cmp.setup({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
         }),
-        ["<CR>"] = cmp.mapping.confirm(),
-        ["<Tab>"] = cmp.mapping(
-            function(fallback)
-                local copilot_keys = vim.fn["copilot#Accept"]()
-                if cmp.visible() then
-                    cmp.confirm({ select = true })
-                elseif copilot_keys ~= "" and type(copilot_keys) == "string" then
-                    vim.api.nvim_feedkeys(copilot_keys, "n", true)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }
-        ),
+        ["<CR>"] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = false,
+        }),
+        ["<Tab>"] = vim.schedule_wrap(function(fallback)
+          if cmp.visible() and has_words_before() then
+            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select=true })
+          else
+            fallback()
+          end
+        end)
     },
     sources = cmp.config.sources({
+        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "luasnip" }
     }, {
