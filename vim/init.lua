@@ -91,7 +91,7 @@ local plugins = {
     'lukas-reineke/indent-blankline.nvim',
     'onsails/lspkind.nvim',
     'nvim-lualine/lualine.nvim',
-    'preservim/nerdcommenter',
+    'jose-elias-alvarez/null-ls.nvim',
     'mfussenegger/nvim-jdtls',
     'rcarriga/nvim-notify',
     'tpope/vim-fugitive',
@@ -220,6 +220,15 @@ local debuggers = {
 }
 require("mason-nvim-dap").setup({
     ensure_installed = debuggers
+})
+
+local null_ls = require("null-ls")
+null_ls.setup({
+    sources = {
+        null_ls.builtins.code_actions.eslint_d,
+        null_ls.builtins.code_actions.gitsigns,
+        null_ls.builtins.formatting.prettier
+    }
 })
 
 require('nvim-web-devicons').setup { default = true, }
