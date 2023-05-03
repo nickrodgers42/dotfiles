@@ -415,9 +415,11 @@ require('aerial').setup({
         win_opts = {
             number = true,
             relativenumber = true
-        }
+        },
+        placement = "edge"
     },
-    show_guides = true
+    attach_mode = "global",
+    show_guides = true,
 })
 
 require('nvim-tree').setup {
