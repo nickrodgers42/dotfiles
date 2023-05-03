@@ -85,6 +85,7 @@ local plugins = {
     'saadparwaiz1/cmp_luasnip',
     'zbirenbaum/copilot.lua',
     'zbirenbaum/copilot-cmp',
+    'rafamadriz/friendly-snippets',
     'lewis6991/gitsigns.nvim',
     'nmac427/guess-indent.nvim',
     'lukas-reineke/indent-blankline.nvim',
