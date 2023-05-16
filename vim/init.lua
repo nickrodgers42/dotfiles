@@ -94,6 +94,7 @@ local plugins = {
     'jose-elias-alvarez/null-ls.nvim',
     'mfussenegger/nvim-jdtls',
     'rcarriga/nvim-notify',
+    'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
     'psliwka/vim-smoothie',
     'vim-test/vim-test',
@@ -207,6 +208,9 @@ local parsers = {
     "vimdoc",
 }
 require('nvim-treesitter.configs').setup({
+    autotag = {
+        enable = true,
+    },
     ensure_installed = parsers,
     highlight = {
         enable = true,
