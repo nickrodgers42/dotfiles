@@ -54,9 +54,12 @@ local vim_opts = {
     wrap = false,
     writebackup = false,
 }
-for k, v in pairs(vim_opts) do
-    vim.opt[k] = v
+local set_opts = function(opts)
+    for k, v in pairs(opts) do
+        vim.opt[k] = v
+    end
 end
+set_opts(vim_opts)
 -- Tables can't store nil values
 vim.opt.guicursor = nil
 vim.opt.mouse = nil
@@ -236,15 +239,15 @@ local nmap = function(mapping, command, opts)
 end
 
 local nmaps = {
-    { '<C-h>', 'TmuxNavigateLeft' },
-    { '<C-j>', 'TmuxNavigateDown' },
-    { '<C-k>', 'TmuxNavigateUp' },
-    { '<C-l>', 'TmuxNavigateRight' },
-    { '<C-n>', 'NvimTreeToggle' },
-    { '<C-p>', 'lua require("telescope.builtin").find_files()' },
-    { '<leader>B', 'lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))' },
-    { '<leader>a', 'AerialToggle!' },
-    { '<leader>b', 'lua require("dap").toggle_breakpoint()' },
+    { '<C-h>',      'TmuxNavigateLeft' },
+    { '<C-j>',      'TmuxNavigateDown' },
+    { '<C-k>',      'TmuxNavigateUp' },
+    { '<C-l>',      'TmuxNavigateRight' },
+    { '<C-n>',      'NvimTreeToggle' },
+    { '<C-p>',      'lua require("telescope.builtin").find_files()' },
+    { '<leader>B',  'lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))' },
+    { '<leader>a',  'AerialToggle!' },
+    { '<leader>b',  'lua require("dap").toggle_breakpoint()' },
     { '<leader>dd', 'lua require("dap").continue()' },
     { '<leader>di', 'lua require("dap").step_into()' },
     { '<leader>dl', 'lua require("dap").run_last()' },
@@ -253,7 +256,7 @@ local nmaps = {
     { '<leader>dp', 'lua require("dap").step_out()' },
     { '<leader>dq', 'lua require("dap").terminate()' },
     { '<leader>dr', 'lua require("dap").repl.open()' },
-    { '<leader>e', 'lua vim.diagnostic.open_float()' },
+    { '<leader>e',  'lua vim.diagnostic.open_float()' },
     { '<leader>fa', 'lua require("telescope").extensions.aerial.aerial()' },
     { '<leader>fb', 'lua require("telescope.builtin").buffers()' },
     { '<leader>ff', 'lua require("telescope.builtin").find_files({no_ignore=true})' },
@@ -262,32 +265,32 @@ local nmaps = {
     { '<leader>fj', '%!jq' },
     { '<leader>fv', 'lua require("telescope.builtin").find_files({search_dirs={"~/dotfiles"}, hidden=true})' },
     { '<leader>lp', 'lua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))' },
-    { '<leader>n', 'NvimTreeFindFile' },
-    { '<leader>q', 'lua vim.diagnostic.setloclist()' },
+    { '<leader>n',  'NvimTreeFindFile' },
+    { '<leader>q',  'lua vim.diagnostic.setloclist()' },
     { '<leader>tT', 'TestFile' },
     { '<leader>ta', 'TestSuite' },
     { '<leader>tg', 'TestVisit' },
     { '<leader>tl', 'TestLast' },
     { '<leader>tt', 'TestNearest' },
-    { 'Y', 'y$', { noremap = true }},
-    { '[d', 'lua vim.diagnostic.goto_prev()' },
-    { ']d', 'lua vim.diagnostic.goto_next()' },
-    { 'gr', 'lua require("telescope.builtin").lsp_references()' },
+    { 'Y',          'y$',                                                                                    { noremap = true } },
+    { '[d',         'lua vim.diagnostic.goto_prev()' },
+    { ']d',         'lua vim.diagnostic.goto_next()' },
+    { 'gr',         'lua require("telescope.builtin").lsp_references()' },
 }
 for _, keymap in ipairs(nmaps) do
     nmap(unpack(keymap))
 end
 
 local signs = {
-    { 'DapBreakpoint', { text = '', texthl = 'DapBreakpoint', linehl = '', numhl = '' } },
+    { 'DapBreakpoint',          { text = '', texthl = 'DapBreakpoint', linehl = '', numhl = '' } },
     { 'DapBreakpointCondition', { text = '', texthl = 'DapBreakpointCondition', linehl = '', numhl = '' } },
-    { 'DapBreakpointRejected', { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = '' } },
-    { 'DapLogPoint', { text = '', texthl = 'DapLogPoint', linehl = '', numhl = '' } },
-    { 'DapStopped', { text = '', texthl = 'DapStopped', linehl = '', numhl = '' } },
-    { 'DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' } },
-    { 'DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' } },
-    { 'DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' } },
-    { 'DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' } },
+    { 'DapBreakpointRejected',  { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = '' } },
+    { 'DapLogPoint',            { text = '', texthl = 'DapLogPoint', linehl = '', numhl = '' } },
+    { 'DapStopped',             { text = '', texthl = 'DapStopped', linehl = '', numhl = '' } },
+    { 'DiagnosticSignError',    { text = '', texthl = 'DiagnosticSignError' } },
+    { 'DiagnosticSignHint',     { text = '', texthl = 'DiagnosticSignHint' } },
+    { 'DiagnosticSignInfo',     { text = '', texthl = 'DiagnosticSignInfo' } },
+    { 'DiagnosticSignWarn',     { text = '', texthl = 'DiagnosticSignWarn' } },
 }
 for _, sign in ipairs(signs) do
     vim.fn.sign_define(unpack(sign))
@@ -347,21 +350,36 @@ vim.g.vimwiki_listsyms_rejected = '✗'
 vim.g["test#strategy"] = 'vimux'
 vim.g.VimuxOrientation = "h"
 
-vim.cmd([[
-augroup HIGHLIGHT_WHITESPACE
-    autocmd!
-    autocmd BufWinEnter * if &ft != 'help' && expand('%p') != '' | match Error /\s\+$/ | endif
-    autocmd InsertEnter * if &ft != 'help' && expand('%p') != '' | match Error /\s\+\%#\@<!$/ | endif
-    autocmd InsertLeave * if &ft != 'help' && expand('%p') != '' | match Error /\s\+$/ | endif
-    autocmd BufWinLeave * call clearmatches()
-augroup END
+local highlight_whitespace = vim.api.nvim_create_augroup('highlight_whitespace', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'InsertLeave', 'InsertEnter', 'BufWinLeave' }, {
+    group = highlight_whitespace,
+    callback = function(ev)
+        vim.schedule(function()
+            if (vim.bo.filetype == 'help' or vim.fn.expand("%p") == '') then
+                return
+            end
+            vim.fn.clearmatches()
+            if (ev.event == 'InsertEnter') then
+                vim.fn.matchadd("Error", [[\s\+\%#\@<!$]])
+            elseif (ev.event ~= 'BufWinLeave') then
+                vim.fn.matchadd("Error", [[\s\+$]])
+            end
+        end)
+    end,
+})
 
-augroup HTML_TAB
-    autocmd!
-    autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2
-    autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2
-augroup END
-]])
+local html_tab = vim.api.nvim_create_augroup('html_tab', { clear = true })
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "*.html", "*.jsx", "*.tsx" },
+    group = html_tab,
+    callback = function()
+        set_opts({
+            tabstop = 2,
+            shiftwidth = 2,
+            softtabstop = 2,
+        })
+    end
+})
 
 function SourceIfExists(filename)
     local f = io.open(filename, "r")
@@ -445,9 +463,9 @@ require('nvim-tree').setup {
 
 
 local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
 require("copilot").setup({
@@ -490,11 +508,11 @@ cmp.setup({
             select = false,
         }),
         ["<Tab>"] = vim.schedule_wrap(function(fallback)
-          if cmp.visible() and has_words_before() then
-            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select=true })
-          else
-            fallback()
-          end
+            if cmp.visible() and has_words_before() then
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
+            else
+                fallback()
+            end
         end)
     },
     sources = cmp.config.sources({
@@ -538,18 +556,18 @@ local buf_map = function(bufnr, mapping, command, opts)
 end
 
 local buf_maps = {
-    { '<leader>D', 'lua vim.lsp.buf.type_definition()' },
+    { '<leader>D',  'lua vim.lsp.buf.type_definition()' },
     { '<leader>ca', 'lua vim.lsp.buf.code_action()' },
-    { '<leader>f', 'lua vim.lsp.buf.format { async = true }' },
+    { '<leader>f',  'lua vim.lsp.buf.format { async = true }' },
     { '<leader>rn', 'lua vim.lsp.buf.rename()' },
     { '<leader>wa', 'lua vim.lsp.buf.add_workspace_folder()' },
     { '<leader>wl', 'lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))' },
     { '<leader>wr', 'lua vim.lsp.buf.remove_workspace_folder()' },
-    { 'K', 'lua vim.lsp.buf.hover()' },
-    { 'gD', 'lua vim.lsp.buf.declaration()' },
-    { 'gd', 'lua vim.lsp.buf.definition()' },
-    { 'gi', 'lua vim.lsp.buf.implementation()' },
-    { 'gk', 'lua vim.lsp.buf.signature_help()' },
+    { 'K',          'lua vim.lsp.buf.hover()' },
+    { 'gD',         'lua vim.lsp.buf.declaration()' },
+    { 'gd',         'lua vim.lsp.buf.definition()' },
+    { 'gi',         'lua vim.lsp.buf.implementation()' },
+    { 'gk',         'lua vim.lsp.buf.signature_help()' },
 }
 
 MapLspCommands = function(_, bufnr)
