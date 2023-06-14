@@ -94,8 +94,11 @@ local plugins = {
     'lukas-reineke/indent-blankline.nvim',
     'onsails/lspkind.nvim',
     'nvim-lualine/lualine.nvim',
+    'Shatur/neovim-session-manager',
     'jose-elias-alvarez/null-ls.nvim',
     'mfussenegger/nvim-jdtls',
+    'mrded/nvim-lsp-notify',
+    'NvChad/nvim-colorizer.lua',
     'rcarriga/nvim-notify',
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
@@ -165,6 +168,7 @@ require('lazy').setup(plugins)
 
 local default_setup = {
     'Comment',
+    'colorizer',
     'copilot_cmp',
     'dapui',
     'gitsigns',
@@ -398,6 +402,7 @@ require("notify").setup({
     background_colour = "#000000",
 })
 vim.notify = require('notify')
+require('lsp-notify').setup({})
 
 require("indent_blankline").setup {
     show_current_context = true,
@@ -416,7 +421,7 @@ require('lualine').setup {
             {
                 'filename',
                 path = 1
-            }
+            },
         },
         lualine_x = { "aerial" },
         lualine_y = { "encoding", 'fileformat', 'filetype' },
@@ -572,7 +577,7 @@ local buf_maps = {
 
 MapLspCommands = function(_, bufnr)
     -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
     for _, keymap in ipairs(buf_maps) do
         buf_map(bufnr, unpack(keymap))
@@ -583,6 +588,12 @@ local on_attach = function(client, bufnr)
     MapLspCommands(client, bufnr)
 end
 
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(event)
+        MapLspCommands(_, event.buf)
+    end
+})
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 cmp_nvim_lsp.setup {
@@ -594,7 +605,6 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 
 for _, name in ipairs(servers) do
     lspconfig[name].setup {
-        on_attach = on_attach,
         capabilities = capabilities
     }
 end
@@ -641,6 +651,11 @@ lspconfig.pylsp.setup {
     }
 }
 
+local session_manager_config = require('session_manager.config')
+require('session_manager').setup({
+    autoload_mode = session_manager_config.AutoloadMode.Disabled,
+})
+
 vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
 local function configureAlpha()
     local alpha = require 'alpha'
@@ -661,7 +676,8 @@ local function configureAlpha()
         dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
         dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
         dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-        dashboard.button("s", "󰦛" .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+        dashboard.button("sc", "󰦛" .. " Restore cwd session", [[:SessionManager load_current_dir_session<CR>]]),
+        dashboard.button("sl", "󰦛" .. " Restore last session", [[:SessionManager load_last_session<CR>]]),
         dashboard.button("l", "" .. " Lazy", ":Lazy<CR>"),
         dashboard.button("q", " " .. " Quit", ":qa<CR>"),
     }
@@ -685,5 +701,6 @@ null_ls.setup({
         null_ls.builtins.code_actions.eslint_d,
         null_ls.builtins.code_actions.gitsigns,
         null_ls.builtins.formatting.prettier
-    }
+    },
+    on_attach=on_attach
 })
