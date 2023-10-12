@@ -20,7 +20,7 @@ local vim_opts = {
     autoindent = true,
     backspace = "indent,eol,start",
     backup = false,
-    colorcolumn = "80",
+    colorcolumn = "80,120",
     confirm = true,
     cursorline = true,
     errorbells = false,
@@ -63,6 +63,12 @@ set_opts(vim_opts)
 -- Tables can't store nil values
 vim.opt.guicursor = nil
 vim.opt.mouse = nil
+vim.g.vimwiki_list = {
+    {
+        syms = ' ○◐●✓',
+        lystsyms_rejected='✗'
+    }
+}
 
 vim.g.mapleader = " "
 
@@ -86,19 +92,17 @@ local plugins = {
     'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
     'saadparwaiz1/cmp_luasnip',
-    'zbirenbaum/copilot.lua',
-    'zbirenbaum/copilot-cmp',
+    -- 'zbirenbaum/copilot.lua',
+    -- 'zbirenbaum/copilot-cmp',
     'rafamadriz/friendly-snippets',
     'lewis6991/gitsigns.nvim',
     'nmac427/guess-indent.nvim',
-    'lukas-reineke/indent-blankline.nvim',
     'onsails/lspkind.nvim',
     'nvim-lualine/lualine.nvim',
     'Shatur/neovim-session-manager',
     'jose-elias-alvarez/null-ls.nvim',
     'mfussenegger/nvim-jdtls',
     'mrded/nvim-lsp-notify',
-    'NvChad/nvim-colorizer.lua',
     'rcarriga/nvim-notify',
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
@@ -107,6 +111,11 @@ local plugins = {
     'christoomey/vim-tmux-navigator',
     'preservim/vimux',
     'vimwiki/vimwiki',
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        main = 'ibl',
+        opts = {}
+    },
     {
         'catppuccin/nvim',
         name = 'catppuccin',
@@ -168,11 +177,12 @@ require('lazy').setup(plugins)
 
 local default_setup = {
     'Comment',
-    'colorizer',
-    'copilot_cmp',
+    -- 'colorizer',
+    -- 'copilot_cmp',
     'dapui',
     'gitsigns',
     'guess-indent',
+    'ibl',
     'mason',
     'nvim-dap-virtual-text',
     'telescope',
@@ -194,6 +204,7 @@ local servers = {
     "tsserver",
     "vimls",
     "yamlls",
+    "wgsl_analyzer",
     "zk"
 }
 
@@ -235,6 +246,7 @@ require("mason-nvim-dap").setup({
 
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
+vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true, silent = true })
 
 local map = vim.api.nvim_set_keymap
 local nmap = function(mapping, command, opts)
@@ -276,7 +288,10 @@ local nmaps = {
     { '<leader>tg', 'TestVisit' },
     { '<leader>tl', 'TestLast' },
     { '<leader>tt', 'TestNearest' },
-    { 'Y',          'y$',                                                                                    { noremap = true } },
+    { '<leader>lt', 'VimwikiListToggle' },
+    { '<leader>li', 'VimwikiToggleListItem' },
+    { '<leader>lii', 'VimwikiIncrementListItem' },
+    { '<leader>lid', 'VimwikiDecrementListItem' },
     { '[d',         'lua vim.diagnostic.goto_prev()' },
     { ']d',         'lua vim.diagnostic.goto_next()' },
     { 'gr',         'lua require("telescope.builtin").lsp_references()' },
@@ -349,9 +364,9 @@ highlight Normal guibg=none
 ]])
 
 vim.g.tmux_navigator_no_mappings = 1
-vim.g.vimwiki_listsyms = ' ○◐●✓'
-vim.g.vimwiki_listsyms_rejected = '✗'
 vim.g["test#strategy"] = 'vimux'
+vim.g["test#python#runner"] = 'pytest'
+vim.g["test#python#command"] = 'python3 -m pytest'
 vim.g.VimuxOrientation = "h"
 
 local highlight_whitespace = vim.api.nvim_create_augroup('highlight_whitespace', { clear = true })
@@ -402,13 +417,7 @@ require("notify").setup({
     background_colour = "#000000",
 })
 vim.notify = require('notify')
-require('lsp-notify').setup({})
-
-require("indent_blankline").setup {
-    show_current_context = true,
-    use_treesitter = true,
-    bufname_exclude = { '' }
-}
+-- require('lsp-notify').setup({})
 
 require('lualine').setup {
     options = {
@@ -473,10 +482,10 @@ local has_words_before = function()
     return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
-require("copilot").setup({
-    suggestion = { enabled = false },
-    panel = { enabled = false },
-})
+-- require("copilot").setup({
+--     suggestion = { enabled = false },
+--     panel = { enabled = false },
+-- })
 
 local cmp = require "cmp"
 local lspconfig = require "lspconfig"
@@ -521,7 +530,7 @@ cmp.setup({
         end)
     },
     sources = cmp.config.sources({
-        { name = "copilot" },
+        -- { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "luasnip" }
     }, {
@@ -608,6 +617,8 @@ for _, name in ipairs(servers) do
         capabilities = capabilities
     }
 end
+
+lspconfig.glsl_analyzer.setup{}
 
 lspconfig.lua_ls.setup {
     on_attach = on_attach,
@@ -704,3 +715,20 @@ null_ls.setup({
     },
     on_attach=on_attach
 })
+
+local in_wsl = os.getenv('WSL_DISTRO_NAME') ~= nil
+
+if in_wsl then
+    vim.g.clipboard = {
+        name = 'wsl clipboard',
+        copy = { ["+"] = { "clip.exe" },["*"] = { "clip.exe" } },
+        paste = { ["+"] = { "nvim_paste" },["*"] = { "nvim_paste" } },
+        cache_enabled = true
+    }
+end
+
+vim.cmd [[
+" Recognize glsl
+au BufNewFile,BufRead *.frag set filetype=glsl
+au BufNewFile,BufRead *.vert set filetype=glsl
+]]
