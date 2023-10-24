@@ -1,38 +1,14 @@
 NVIM_HOME := $(shell echo $${XDG_DATA_HOME:-$$HOME/.local/share})
-
-stow:
-	sudo apt-get install -y stow
-
-
-ripgrep:
-	curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
-	sudo dpkg -i ripgrep_13.0.0_amd64.deb
-
-
-fd:
-	sudo apt-get install -y fd-find
-
-
 INIT_DIR := $(HOME)/.config/nvim
 
-vim: stow ripgrep fd
-	sudo apt-get install -y build-essential git
-	curl -L -o nvim-linux64.deb https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb
-	sudo apt install ./nvim-linux64.deb
+vim:
 	stow -t ~ --ignore=ftplugin vim
 	mkdir -p $(INIT_DIR)
 	stow -t $(INIT_DIR) vim
+	stow -t $(HOME) vim
 
 
-tmux-install:
-	sudo apt-get install -y tmux
-
-
-tpm: tmux-install
-	-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-
-tmux-conf: stow tpm
+tmux-conf:
 	stow -t ~ tmux
 	tmux start-server
 	tmux new-session -d
@@ -40,11 +16,11 @@ tmux-conf: stow tpm
 	tmux kill-server
 
 
-gitconfig: stow
+gitconfig:
 	stow -t ~ git
 
 
-intellij: stow
+intellij:
 	stow -t ~ intellij
 
 

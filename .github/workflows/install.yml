@@ -13,6 +13,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Install brew mac
+      run: make brewinstall
+
+    - name: Install brew dependencies
+      run: make brewdeps
+
+    - name: Install tpm
+      run: make tpm
 
     - name: Install dependencies Mac
       run: make mac
@@ -22,6 +32,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: Homebrew/actions/setup-homebrew@master
 
-    - name: Install dependencies Ubuntu
+    - name: Install brew ubuntu
+      run: make brewinstall
+
+    - name: Install brew env
+      run: make brewenv
+
+    - name: Install brew dependencies
+      run: make brewdeps
+
+    - name: Install tpm
+      run: make tpm
+
+    - name: Install dotfiles ubuntu
       run: make ubuntu
