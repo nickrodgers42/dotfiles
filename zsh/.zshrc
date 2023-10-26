@@ -12,7 +12,7 @@ source ~/Git/zsh-snap/znap.zsh  # Start Znap
 
 source ~/.path
 
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="$HOME/Git/ohmyzsh"
 
 unsetopt extended_glob
 export VISUAL=nvim
@@ -42,6 +42,8 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 znap source ohmyzsh/ohmyzsh
+znap source romkatv/powerlevel10k
+znap clone catppuccin/iterm
 
 # OhMyZsh Plugins
 plugins=(git aws)
@@ -49,6 +51,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Znap plugins
 znap source zsh-users/zsh-syntax-highlighting
+source $HOME/Git/powerlevel10k/powerlevel10k.zsh-theme
 
 # User configuration
 set -o vi
