@@ -5,46 +5,20 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      chosen-os:
+        description: "OS to run on"
+        required: true
+        type: choice
+        options:
+          - ubuntu-latest
+          - macos-latest
 
 jobs:
-  build-mac:
-
-    runs-on: macos-latest
-
+  install-script:
+    runs-on: ${{ inputs.chosen-os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: Homebrew/actions/setup-homebrew@master
-
-    - name: Install brew mac
-      run: make brewinstall
-
-    - name: Install brew dependencies
-      run: make brewdeps
-
-    - name: Install tpm
-      run: make tpm
-
-    - name: Install dependencies Mac
-      run: make mac
-
-  build-ubuntu:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - uses: Homebrew/actions/setup-homebrew@master
-
-    - name: Install brew ubuntu
-      run: make brewinstall
-
-    - name: Install brew env
-      run: make brewenv
-
-    - name: Install brew dependencies
-      run: make brewdeps
-
-    - name: Install tpm
-      run: make tpm
-
-    - name: Install dotfiles ubuntu
-      run: make ubuntu
+    - name: Run Install script
+      run: ./install.sh
