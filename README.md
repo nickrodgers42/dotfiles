@@ -6,39 +6,7 @@ A repository to manage dotfiles and configurations
 
 ## Installation
 
-### On Mac
-
-* Run `make mac`
-
-### On Ubuntu
-
-* Run `make ubuntu`
-
-### Other Platforms
-
-1. Clone this repo
-1. Install GNU stow
-1. Call `stow <dir>` to install specific dotfiles
-
-
--------------------------------------------------------------------------------
-
-## Installing Dependencies
-
-* Install GNU Stow via your package manager
-
-### neovim
-
-* Run `:PackerSync` to install neovim plugins
-* [ripgrep](https://github.com/BurntSushi/ripgrep)
-* [fd](https://github.com/sharkdp/fd)
-
-
-### tmux
-
-* [tpm](https://github.com/tmux-plugins/tpm) - run `<leader> + I` to install
-plugins
-
+Run the install script `./install.sh`
 
 -------------------------------------------------------------------------------
 

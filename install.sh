@@ -21,22 +21,26 @@ install_brew_deps() {
 }
 
 install_nvm() {
+    echo "Installing nvm..."
 	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 }
 
 install_node() {
+    echo "Installing node..."
     nvm install node
 }
 
 install_node_deps() {
+    echo "Installing dependencies from npm..."
 	npm i -g \
 		eslint \
 		tldr
 }
 
 install_tpm() {
+    echo "Installing tpm..."
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 }
 
