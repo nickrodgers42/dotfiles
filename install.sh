@@ -13,6 +13,7 @@ install_brew_deps() {
         fd \
         fzf \
         gcc \
+        jq \
         make \
         neovim \
         ripgrep \

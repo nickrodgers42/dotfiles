@@ -65,8 +65,8 @@ vim.opt.guicursor = nil
 vim.opt.mouse = nil
 vim.g.vimwiki_list = {
     {
-        syms = ' ○◐●✓',
-        lystsyms_rejected='✗'
+        listsyms = ' ○◐●✓',
+        listsyms_rejected='✗'
     }
 }
 

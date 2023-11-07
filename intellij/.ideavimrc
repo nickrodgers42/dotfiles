@@ -65,6 +65,7 @@ nnoremap gr :action ShowUsages<CR>
 nnoremap <C-e> :action ShowIntentionActions<CR>
 nnoremap <leader>e :action ShowIntentionActions<CR>
 nnoremap <leader>R :action RunContextPopupGroup<CR>
+nnoremap <leader>f :action ReformatCode<CR>
 
 "" Terminal
 map <Leader>t :action ActivateTerminalToolWindow<CR>
