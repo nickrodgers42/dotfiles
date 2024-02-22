@@ -88,7 +88,6 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     -- General Plugins
     'numToStr/Comment.nvim',
-    'stevearc/aerial.nvim',
     'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
     'saadparwaiz1/cmp_luasnip',
@@ -98,7 +97,6 @@ local plugins = {
     'lewis6991/gitsigns.nvim',
     'nmac427/guess-indent.nvim',
     'onsails/lspkind.nvim',
-    'nvim-lualine/lualine.nvim',
     'Shatur/neovim-session-manager',
     'jose-elias-alvarez/null-ls.nvim',
     'mfussenegger/nvim-jdtls',
@@ -111,6 +109,62 @@ local plugins = {
     'christoomey/vim-tmux-navigator',
     'preservim/vimux',
     'vimwiki/vimwiki',
+
+    -- lsp stuff
+    'neovim/nvim-lspconfig',
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+
+    -- nvim-cmp
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/vim-vsnip',
+
+    -- nvim-dap
+    'jayp0521/mason-nvim-dap.nvim',
+    'mfussenegger/nvim-dap',
+    'theHamsta/nvim-dap-virtual-text',
+    'rcarriga/nvim-dap-ui',
+    {
+        'stevearc/aerial.nvim',
+        opts = {
+            layout = {
+                width = 30,
+                win_opts = {
+                    number = true,
+                    relativenumber = true
+                },
+                placement = "edge"
+            },
+            attach_mode = "global",
+            show_guides = true,
+        }
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        opts = {
+            options = {
+                theme = 'catppuccin',
+                section_separators = { left = '', right = '' },
+                component_separators = { left = '', right = '' }
+            },
+            sections = {
+                lualine_c = {
+                    {
+                        'filename',
+                        path = 1
+                    },
+                },
+                lualine_x = { "aerial" },
+                lualine_y = { "encoding", 'fileformat', 'filetype' },
+                lualine_z = { 'progress', 'location' }
+            }
+        }
+    },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
@@ -126,9 +180,51 @@ local plugins = {
         name = 'catppuccin',
         lazy = false,
         priority = 1000,
-        config = function()
-            vim.cmd([[colorscheme catppuccin]])
+        config = function(_, opts)
+            require("catppuccin").setup(opts)
+            vim.cmd.colorscheme "catppuccin"
         end,
+        opts = {
+            flavour = "frappe",
+            transparent_background = true,
+            integrations = {
+                aerial = true,
+                cmp = true,
+                dap = {
+                    enabled = true,
+                    enable_ui = true, -- enable nvim-dap-ui
+                },
+                gitgutter = true,
+                indent_blankline = {
+                    enabled = true,
+                    colored_indent_levels = true
+                },
+                mason = true,
+                notify = true,
+                nvimtree = true,
+                telescope = true,
+                treesitter = true,
+                treesitter_context = true,
+                vimwiki = true,
+                which_key = true,
+            },
+            custom_highlights = function(colors)
+                return {
+                    NonText = { fg = colors.surface1 },
+                    SignColumn = { fg = colors.overlay1 },
+                    Comment = { fg = colors.overlay0 },
+                    LineNr = { fg = colors.overlay1 },
+                    VertSplit = {
+                        bg = colors.surface2,
+                        fg = colors.surface2
+                    },
+                    NvimTreeVertSplit = {
+                        bg = colors.surface2,
+                        fg = colors.surface2
+                    }
+                }
+            end
+        }
     },
     {
         "folke/which-key.nvim",
@@ -155,28 +251,38 @@ local plugins = {
     },
 
     -- nvim-tree
-    'kyazdani42/nvim-web-devicons',
-    'kyazdani42/nvim-tree.lua',
-
-    -- lsp stuff
-    'neovim/nvim-lspconfig',
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-
-    -- nvim-cmp
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-cmdline',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/nvim-cmp',
-    'hrsh7th/vim-vsnip',
-
-    -- nvim-dap
-    'jayp0521/mason-nvim-dap.nvim',
-    'mfussenegger/nvim-dap',
-    'theHamsta/nvim-dap-virtual-text',
-    'rcarriga/nvim-dap-ui',
+    {
+        'kyazdani42/nvim-web-devicons',
+        opts = {
+            default = true
+        }
+    },
+    {
+        'kyazdani42/nvim-tree.lua',
+        opts = {
+            auto_reload_on_write = true,
+            diagnostics = {
+                enable = true,
+            },
+            renderer = {
+                group_empty = true,
+            },
+            update_focused_file = {
+                enable = true,
+            },
+            filesystem_watchers = {
+                enable = true
+            },
+            view = {
+                adaptive_size = true,
+                width = {
+                    max = 60
+                },
+                number = true,
+                relativenumber = true
+            }
+        }
+    },
 }
 require('lazy').setup(plugins)
 
@@ -458,49 +564,6 @@ for _, sign in ipairs(signs) do
     vim.fn.sign_define(unpack(sign))
 end
 
-require('nvim-web-devicons').setup { default = true, }
-require("catppuccin").setup({
-    flavour = "frappe",
-    transparent_background = true,
-    integrations = {
-        aerial = true,
-        cmp = true,
-        dap = {
-            enabled = true,
-            enable_ui = true, -- enable nvim-dap-ui
-        },
-        gitgutter = true,
-        indent_blankline = {
-            enabled = true,
-            colored_indent_levels = true
-        },
-        mason = true,
-        notify = true,
-        nvimtree = true,
-        telescope = true,
-        treesitter = true,
-        treesitter_context = true,
-        vimwiki = true,
-        which_key = true,
-    },
-    custom_highlights = function(colors)
-        return {
-            SignColumn = { fg = colors.overlay1 },
-            Comment = { fg = colors.overlay1 },
-            LineNr = { fg = colors.overlay1 },
-            VertSplit = {
-                bg = colors.surface2,
-                fg = colors.surface2
-            },
-            NvimTreeVertSplit = {
-                bg = colors.surface2,
-                fg = colors.surface2
-            }
-        }
-    end
-})
-
-vim.cmd.colorscheme "catppuccin"
 vim.cmd([[
 filetype plugin on
 highlight Normal guibg=none
@@ -560,64 +623,6 @@ require("notify").setup({
     background_colour = "#000000",
 })
 vim.notify = require('notify')
--- require('lsp-notify').setup({})
-
-require('lualine').setup {
-    options = {
-        theme = 'catppuccin',
-        section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' }
-    },
-    sections = {
-        lualine_c = {
-            {
-                'filename',
-                path = 1
-            },
-        },
-        lualine_x = { "aerial" },
-        lualine_y = { "encoding", 'fileformat', 'filetype' },
-        lualine_z = { 'progress', 'location' }
-    }
-}
-
-require('aerial').setup({
-    layout = {
-        width = 30,
-        win_opts = {
-            number = true,
-            relativenumber = true
-        },
-        placement = "edge"
-    },
-    attach_mode = "global",
-    show_guides = true,
-})
-
-require('nvim-tree').setup {
-    auto_reload_on_write = true,
-    diagnostics = {
-        enable = true,
-    },
-    renderer = {
-        group_empty = true,
-    },
-    update_focused_file = {
-        enable = true,
-    },
-    filesystem_watchers = {
-        enable = true
-    },
-    view = {
-        adaptive_size = true,
-        width = {
-            max = 60
-        },
-        number = true,
-        relativenumber = true
-    }
-}
-
 
 local has_words_before = function()
     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
