@@ -42,6 +42,7 @@ local vim_opts = {
     smartindent = true,
     softtabstop = 4,
     spelllang = "en_us",
+    splitright = true,
     startofline = false,
     swapfile = false,
     tabstop = 4,
@@ -524,7 +525,7 @@ local nmaps = {
     { '<leader>e',  'lua vim.diagnostic.open_float()' },
     { '<leader>fa', 'lua require("telescope").extensions.aerial.aerial()' },
     { '<leader>fb', 'lua require("telescope.builtin").buffers()' },
-    { '<leader>ff', 'lua require("telescope.builtin").find_files({no_ignore=true})' },
+    { '<leader>ff', 'lua require("telescope.builtin").find_files({no_ignore=true, hidden=true})' },
     { '<leader>fg', 'lua require("telescope.builtin").live_grep()' },
     { '<leader>fh', 'lua require("telescope.builtin").help_tags()' },
     { '<leader>fj', '%!jq' },
@@ -773,6 +774,7 @@ if in_wsl then
     }
 end
 
+vim.api.nvim_create_user_command("SplitCommand", [[:'<,'>s/\s-/ \\\r    -/g]], {range=true})
 vim.cmd [[
 " Recognize glsl
 au BufNewFile,BufRead *.frag set filetype=glsl
