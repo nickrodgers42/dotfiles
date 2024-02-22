@@ -197,60 +197,195 @@ for _, package in ipairs(default_setup) do
     require(package).setup()
 end
 
-
-local servers = {
-    "bashls",
-    "gopls",
-    "jdtls",
-    "kotlin_language_server",
-    "pylsp",
-    "rust_analyzer",
-    "smithy_ls",
-    "lua_ls",
-    "tsserver",
-    "vimls",
-    "yamlls",
-    "wgsl_analyzer",
-    "zk"
-}
-
-require("mason-lspconfig").setup({
-    ensure_installed = servers,
-    automatic_installation = true
-})
-
-
-local parsers = {
-    "bash",
-    "java",
-    "javascript",
-    "kotlin",
-    "lua",
-    "rust",
-    "python",
-    "rust",
-    "smithy",
-    "typescript",
-    "vimdoc",
-}
-require('nvim-treesitter.configs').setup({
-    autotag = {
-        enable = true,
+local language_configs = {
+    {
+        language_server = "bashls",
+        parser = "bash",
     },
-    ensure_installed = parsers,
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = true,
+    {
+        language_server = "gopls",
+        parser = "go"
+    },
+    {
+        language_server = "jdtls",
+        parser = "java",
+        debuggers = { "java-debug-adapter", "java-test" }
+    },
+    {
+        language_server = "kotlin_language_server",
+        parser = "kotlin",
+    },
+    {
+        language_server = "lua_ls",
+        parser = "lua",
+        lspconfig_settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' }
+                },
+                workspace = {
+                    library = {
+                        vim.env.VIMRUNTIME
+                    }
+                },
+                telemetry = {
+                    enable = false,
+                },
+                format = {
+                    enable = true,
+                    defaultConfig = {
+                        indent_style = "space",
+                        indent_size = "2",
+                    },
+                },
+            }
+        }
+    },
+    {
+        language_server = "pylsp",
+        parser = "python",
+        lspconfig_settings = {
+            pylsp = {
+                plugins = {
+                    pycodestyle = {
+                        ignore = {},
+                        maxLineLength = 120,
+                    },
+                    rope_autoimport = {
+                        enabled = true
+                    }
+                }
+            }
+        }
+    },
+    {
+        language_server = "rust_analyzer",
+        parser = "rust",
+        lspconfig_settings = {
+            ["rust_analyzer"] = {
+                diagnostics = {
+                    enable = true,
+                    experimental = {
+                        enable = true
+                    }
+                }
+            }
+        }
+    },
+    {
+        language_server = "smithy_ls",
+        parser = "smithy"
+    },
+    {
+        language_server = "tsserver",
+        parser = "typescript"
+    },
+    {
+        language_server = "yamlls",
+        parser = "yaml"
+    },
+    {
+        langauge_server = "wgsl_analyzer",
+        parser = "wgsl",
+    },
+    {
+        language_server = "zk",
+        parser = "markdown"
+    },
+    {
+        parser = "vimdoc"
     }
+}
+
+local buf_map = function(bufnr, mapping, command, opts)
+    opts = opts or { noremap = true, silent = true }
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', mapping, ':' .. command .. '<CR>', opts)
+end
+
+-- Mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+local buf_maps = {
+    { '<leader>D',  'lua vim.lsp.buf.type_definition()' },
+    { '<leader>ca', 'lua vim.lsp.buf.code_action()' },
+    { '<leader>f',  'lua vim.lsp.buf.format { async = true }' },
+    { '<leader>rn', 'lua vim.lsp.buf.rename()' },
+    { '<leader>wa', 'lua vim.lsp.buf.add_workspace_folder()' },
+    { '<leader>wl', 'lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))' },
+    { '<leader>wr', 'lua vim.lsp.buf.remove_workspace_folder()' },
+    { 'K',          'lua vim.lsp.buf.hover()' },
+    { 'gD',         'lua vim.lsp.buf.declaration()' },
+    { 'gd',         'lua vim.lsp.buf.definition()' },
+    { 'gi',         'lua vim.lsp.buf.implementation()' },
+    { 'gk',         'lua vim.lsp.buf.signature_help()' },
+}
+
+MapLspCommands = function(_, bufnr)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    for _, keymap in ipairs(buf_maps) do
+        buf_map(bufnr, unpack(keymap))
+    end
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(event)
+        MapLspCommands(_, event.buf)
+    end
 })
 
-local debuggers = {
-    "java-debug-adapter",
-    "java-test"
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
+cmp_nvim_lsp.setup {
+    sources = {
+        name = 'nvim_lsp'
+    }
 }
-require("mason-nvim-dap").setup({
-    ensure_installed = debuggers
-})
+local capabilities = cmp_nvim_lsp.default_capabilities()
+
+local function install_language_servers(configs)
+    local servers = {}
+    local parsers = {}
+    local debuggers = {}
+    local lspconfig = require("lspconfig")
+    for _, config in ipairs(configs) do
+        if config.language_server ~= nil then
+            table.insert(servers, config.language_server)
+            lspconfig[config.language_server].setup {
+                on_attach = MapLspCommands,
+                capabilities = capabilities,
+                settings = config.lspconfig_settings
+            }
+        end
+        if config.parser ~= nil then
+            table.insert(parsers, config.parser)
+        end
+        if config.debuggers ~= nil then
+            for _, debugger in ipairs(config.debuggers) do
+                table.insert(debuggers, debugger)
+            end
+        end
+    end
+    require("mason-lspconfig").setup({
+        ensure_installed = servers,
+        automatic_installation = true
+    })
+    require('nvim-treesitter.configs').setup {
+        autotag = {
+            enable = true,
+        },
+        ensure_installed = parsers,
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = true
+        }
+    }
+    require("mason-nvim-dap").setup {
+        ensure_installed = debuggers,
+        automatic_installation = true
+    }
+end
+install_language_servers(language_configs)
 
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
@@ -496,7 +631,6 @@ end
 -- })
 
 local cmp = require "cmp"
-local lspconfig = require "lspconfig"
 local lspkind = require('lspkind')
 
 -- Include the servers you want to have installed by default below
@@ -569,122 +703,6 @@ cmp.setup.cmdline(":", {
 })
 
 
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-
-local buf_map = function(bufnr, mapping, command, opts)
-    opts = opts or { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', mapping, ':' .. command .. '<CR>', opts)
-end
-
-local buf_maps = {
-    { '<leader>D',  'lua vim.lsp.buf.type_definition()' },
-    { '<leader>ca', 'lua vim.lsp.buf.code_action()' },
-    { '<leader>f',  'lua vim.lsp.buf.format { async = true }' },
-    { '<leader>rn', 'lua vim.lsp.buf.rename()' },
-    { '<leader>wa', 'lua vim.lsp.buf.add_workspace_folder()' },
-    { '<leader>wl', 'lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))' },
-    { '<leader>wr', 'lua vim.lsp.buf.remove_workspace_folder()' },
-    { 'K',          'lua vim.lsp.buf.hover()' },
-    { 'gD',         'lua vim.lsp.buf.declaration()' },
-    { 'gd',         'lua vim.lsp.buf.definition()' },
-    { 'gi',         'lua vim.lsp.buf.implementation()' },
-    { 'gk',         'lua vim.lsp.buf.signature_help()' },
-}
-
-MapLspCommands = function(_, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
-    for _, keymap in ipairs(buf_maps) do
-        buf_map(bufnr, unpack(keymap))
-    end
-end
-
-local on_attach = function(client, bufnr)
-    MapLspCommands(client, bufnr)
-end
-
-vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-    callback = function(event)
-        MapLspCommands(_, event.buf)
-    end
-})
-
-local cmp_nvim_lsp = require("cmp_nvim_lsp")
-cmp_nvim_lsp.setup {
-    sources = {
-        name = 'nvim_lsp'
-    }
-}
-local capabilities = cmp_nvim_lsp.default_capabilities()
-
-for _, name in ipairs(servers) do
-    lspconfig[name].setup {
-        capabilities = capabilities
-    }
-end
-
-lspconfig.glsl_analyzer.setup{}
-
-lspconfig.rust_analyzer.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        ["rust_analyzer"] = {
-            diagnostics = {
-                enable = true,
-                experimental = {
-                    enable = true
-                }
-            }
-        }
-    }
-}
-
-lspconfig.lua_ls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { 'vim' }
-            },
-            workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
-            },
-            telemetry = {
-                enable = false,
-            },
-            format = {
-                enable = true,
-                defaultConfig = {
-                    indent_style = "space",
-                    indent_size = "2",
-                },
-            },
-        }
-    }
-}
-lspconfig.pylsp.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        pylsp = {
-            plugins = {
-                pycodestyle = {
-                    ignore = {},
-                    maxLineLength = 120,
-                },
-                rope_autoimport = {
-                    enabled = true
-                }
-            }
-        }
-    }
-}
-
 local session_manager_config = require('session_manager.config')
 require('session_manager').setup({
     autoload_mode = session_manager_config.AutoloadMode.Disabled,
@@ -736,7 +754,7 @@ null_ls.setup({
         null_ls.builtins.code_actions.gitsigns,
         null_ls.builtins.formatting.prettier
     },
-    on_attach=on_attach
+    on_attach=MapLspCommands
 })
 
 local in_wsl = os.getenv('WSL_DISTRO_NAME') ~= nil
