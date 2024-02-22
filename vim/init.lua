@@ -204,6 +204,7 @@ local servers = {
     "jdtls",
     "kotlin_language_server",
     "pylsp",
+    "rust_analyzer",
     "smithy_ls",
     "lua_ls",
     "tsserver",
@@ -225,7 +226,9 @@ local parsers = {
     "javascript",
     "kotlin",
     "lua",
+    "rust",
     "python",
+    "rust",
     "smithy",
     "typescript",
     "vimdoc",
@@ -624,6 +627,21 @@ for _, name in ipairs(servers) do
 end
 
 lspconfig.glsl_analyzer.setup{}
+
+lspconfig.rust_analyzer.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+        ["rust_analyzer"] = {
+            diagnostics = {
+                enable = true,
+                experimental = {
+                    enable = true
+                }
+            }
+        }
+    }
+}
 
 lspconfig.lua_ls.setup {
     on_attach = on_attach,
