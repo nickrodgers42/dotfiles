@@ -112,6 +112,11 @@ local plugins = {
     'preservim/vimux',
     'vimwiki/vimwiki',
     {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        opts = {}
+    },
+    {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
         opts = {}
