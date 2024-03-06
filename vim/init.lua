@@ -105,7 +105,6 @@ local plugins = {
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
     'psliwka/vim-smoothie',
-    'vim-test/vim-test',
     'christoomey/vim-tmux-navigator',
     'preservim/vimux',
     'vimwiki/vimwiki',
@@ -282,6 +281,20 @@ local plugins = {
         'L3MON4D3/LuaSnip',
         build = "make install_jsregexp"
     },
+    {
+      "nvim-neotest/neotest",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "antoinemadec/FixCursorHold.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "nvim-neotest/neotest-python",
+      }
+    },
+    {
+      'mrcjkb/rustaceanvim',
+      version = '^4', -- Recommended
+      ft = { 'rust' },
+    },
 
     -- Telescope
     'nvim-lua/plenary.nvim',
@@ -348,6 +361,13 @@ for _, package in ipairs(default_setup) do
     require(package).setup()
 end
 
+require("neotest").setup {
+    adapters = {
+        require("rustaceanvim.neotest"),
+        require("neotest-python")
+    }
+}
+
 local language_configs = {
     {
         language_server = "bashls",
@@ -410,18 +430,7 @@ local language_configs = {
         }
     },
     {
-        language_server = "rust_analyzer",
         parser = "rust",
-        lspconfig_settings = {
-            ["rust_analyzer"] = {
-                diagnostics = {
-                    enable = true,
-                    experimental = {
-                        enable = true
-                    }
-                }
-            }
-        }
     },
     {
         language_server = "smithy_ls",
@@ -538,6 +547,30 @@ local function install_language_servers(configs)
 end
 install_language_servers(language_configs)
 
+vim.g.rustaceanvim = {
+  -- Plugin configuration
+  tools = {
+  },
+  -- LSP configuration
+  server = {
+    on_attach = MapLspCommands,
+    default_settings = {
+      -- rust-analyzer language server configuration
+      ['rust-analyzer'] = {
+          diagnostics = {
+              enable = true,
+              experimental = {
+                  enable = true
+              }
+          }
+      },
+    },
+  },
+  -- DAP configuration
+  dap = {
+  },
+}
+
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true, silent = true })
@@ -577,11 +610,14 @@ local nmaps = {
     { '<leader>lp', 'lua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))' },
     { '<leader>n',  'NvimTreeFindFile' },
     { '<leader>q',  'lua vim.diagnostic.setloclist()' },
-    { '<leader>tT', 'TestFile' },
-    { '<leader>ta', 'TestSuite' },
-    { '<leader>tg', 'TestVisit' },
-    { '<leader>tl', 'TestLast' },
-    { '<leader>tt', 'TestNearest' },
+    { '<leader>tt', 'lua require("neotest").run.run()' },
+    { '<leader>tT', 'lua require("neotest").run.run(vim.fn.expand("%"))' },
+    { '<leader>ts', 'lua require("neotest").run.run({ suite = true })' },
+    { '<leader>tl', 'lua require("neotest").run.run_last()' },
+    { '<leader>tq', 'lua require("neotest").run.stop()' },
+    { '<leader>to', 'lua require("neotest").output_panel.toggle()' },
+    { '<leader>tc', 'lua require("neotest").output_panel.clear()' },
+    { '<leader>ts', 'lua require("neotest").summary.toggle()' },
     { '<leader>lt', 'VimwikiListToggle' },
     { '<leader>li', 'VimwikiToggleListItem' },
     { '<leader>lii', 'VimwikiIncrementListItem' },
@@ -615,9 +651,6 @@ highlight Normal guibg=none
 ]])
 
 vim.g.tmux_navigator_no_mappings = 1
-vim.g["test#strategy"] = 'vimux'
-vim.g["test#python#runner"] = 'pytest'
-vim.g["test#python#command"] = 'python3 -m pytest'
 vim.g.VimuxOrientation = "h"
 
 local highlight_whitespace = vim.api.nvim_create_augroup('highlight_whitespace', { clear = true })
