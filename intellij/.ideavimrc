@@ -94,4 +94,6 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-\> :action SplitVertically<CR>
 nnoremap <C--> :action SplitHorizontally<CR>
 
+nnoremap d] :action GotoNextError<CR>
+nnoremap d[ :action GotoPreviousError<CR>
 " Find more examples here: https://jb.gg/share-ideavimrc
