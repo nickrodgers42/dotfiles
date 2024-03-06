@@ -203,7 +203,7 @@ local plugins = {
                         path = 1
                     },
                 },
-                lualine_x = { "aerial" },
+                lualine_x = { "aerial", },
                 lualine_y = { "encoding", 'fileformat', 'filetype' },
                 lualine_z = { 'progress', 'location' }
             }
@@ -413,7 +413,7 @@ local language_configs = {
         }
     },
     {
-        language_server = "pylsp",
+        language_server = "pyright",
         parser = "python",
         lspconfig_settings = {
             pylsp = {
@@ -491,7 +491,7 @@ end
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
     callback = function(event)
-        MapLspCommands(_, event.buf)
+        MapLspCommands(nil, event.buf)
     end
 })
 
@@ -531,6 +531,7 @@ local function install_language_servers(configs)
         automatic_installation = true
     })
     require('nvim-treesitter.configs').setup {
+        auto_install = true,
         autotag = {
             enable = true,
         },
