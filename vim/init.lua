@@ -104,7 +104,12 @@ local plugins = {
     'rcarriga/nvim-notify',
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
-    'psliwka/vim-smoothie',
+    {
+        'karb94/neoscroll.nvim',
+        config = function ()
+            require("neoscroll").setup{}
+        end
+    },
     'christoomey/vim-tmux-navigator',
     'preservim/vimux',
     'vimwiki/vimwiki',
