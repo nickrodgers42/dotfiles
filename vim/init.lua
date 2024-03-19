@@ -98,7 +98,7 @@ local plugins = {
     'nmac427/guess-indent.nvim',
     'onsails/lspkind.nvim',
     'Shatur/neovim-session-manager',
-    'jose-elias-alvarez/null-ls.nvim',
+    'nvimtools/none-ls.nvim',
     'mfussenegger/nvim-jdtls',
     'mrded/nvim-lsp-notify',
     'rcarriga/nvim-notify',
@@ -446,6 +446,9 @@ local language_configs = {
         parser = "typescript"
     },
     {
+        language_server = "eslint"
+    },
+    {
         language_server = "yamlls",
         parser = "yaml"
     },
@@ -459,7 +462,7 @@ local language_configs = {
     },
     {
         parser = "vimdoc"
-    }
+    },
 }
 
 local buf_map = function(bufnr, mapping, command, opts)
@@ -839,7 +842,6 @@ configureAlpha()
 local null_ls = require("null-ls")
 null_ls.setup({
     sources = {
-        null_ls.builtins.code_actions.eslint_d,
         null_ls.builtins.code_actions.gitsigns,
         null_ls.builtins.formatting.prettier
     },
