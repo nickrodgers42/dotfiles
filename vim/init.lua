@@ -88,6 +88,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
     -- General Plugins
+    'davidsierradz/cmp-conventionalcommits',
     'numToStr/Comment.nvim',
     'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
@@ -775,6 +776,8 @@ cmp.setup({
 
 cmp.setup.filetype("gitcommit", {
     sources = cmp.config.sources({
+        { name = "conventionalcommits" },
+    }, {
         { name = "cmp_git" },
     }, {
         { name = "buffer" }
