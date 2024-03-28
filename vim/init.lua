@@ -289,6 +289,7 @@ local plugins = {
     {
       "nvim-neotest/neotest",
       dependencies = {
+        "nvim-neotest/nvim-nio",
         "nvim-lua/plenary.nvim",
         "antoinemadec/FixCursorHold.nvim",
         "nvim-treesitter/nvim-treesitter",
@@ -345,7 +346,7 @@ local plugins = {
                 relativenumber = true
             }
         }
-    },
+    }
 }
 require('lazy').setup(plugins)
 
