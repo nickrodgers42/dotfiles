@@ -38,7 +38,6 @@ local jar = plugins_dir .. get_equinox_version(plugins_dir)
 
 local on_attach = function(client, bufnr)
     MapLspCommands(client, bufnr)
-    print("in attach function")
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
 end
 
@@ -47,17 +46,27 @@ local bundles = {
 }
 bundles = vim.list_extend(bundles, vim.split(vim.fn.glob(nvim_dir .. "mason/packages/java-test/extension/server/*.jar", 1), "\n"))
 
-local map = vim.api.nvim_set_keymap
-
-map('n', 'cao', [[<Cmd>lua require'jdtls'.organize_imports()<CR>]], { noremap = true })
-map('n', 'crv', [[<Cmd>lua require('jdtls').extract_variable()<CR>]], { noremap = true })
-map('v', 'crv', [[<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>]], { noremap = true })
-map('n', 'crc', [[<Cmd>lua require('jdtls').extract_constant()<CR>]], { noremap = true })
-map('v', 'crc', [[<Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>]], { noremap = true })
-map('v', 'crm', [[<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>]], { noremap = true })
-map('n', '<Leader>dT', [[<Cmd>lua require'jdtls'.test_class()<CR>]], { noremap = true })
-map('n', '<Leader>dt', [[<Cmd>lua require'jdtls'.test_nearest_method()<CR>]], { noremap = true })
-map('n', '<Leader>ds', [[<Cmd>lua require('jdtls.dap').setup_dap_main_class_configs()<CR>]], { noremap = true })
+local function setJavaKeyMaps()
+    local java_maps = {
+        {'n', '<Leader>dT', 'lua require("jdtls").test_class()' },
+        {'n', '<Leader>ds', 'lua require("jdtls.dap").setup_dap_main_class_configs()' },
+        {'n', '<Leader>dt', 'lua require("jdtls").test_nearest_method()' },
+        {'n', 'cao', 'lua require("jdtls").organize_imports()'},
+        {'n', 'crc', 'lua require("jdtls").extract_constant()' },
+        {'n', 'crv', 'lua require("jdtls").extract_variable()'},
+        {'v', 'crc', 'lua require("jdtls").extract_constant(true)' },
+        {'v', 'crm', 'lua require("jdtls").extract_method(true)' },
+        {'v', 'crv', 'lua require("jdtls").extract_variable(true)'},
+    }
+    for _, keymap in ipairs(java_maps) do
+        local command = '<Cmd>' .. keymap[3] .. '<CR>'
+        if keymap[1] == 'v' then
+            command = '<Esc>' .. command
+        end
+        vim.api.nvim_set_keymap(keymap[1], keymap[2], command, { noremap = true })
+    end
+end
+setJavaKeyMaps()
 
 -- local root_dir = require("jdtls.setup").find_root({"packageInfo"}, "Config")
 package.path = package.path .. ";" .. home .. "/.work.lua"
