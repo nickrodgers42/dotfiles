@@ -1,6 +1,13 @@
 local home = os.getenv('HOME')
 local nvim_dir = home .. "/.local/share/nvim/"
 local jdtls_dir = nvim_dir .. "mason/packages/jdtls/"
+local jdtls_plugins_dir = jdtls_dir .. "plugins/"
+local work_path = home .. "/.work.lua"
+if vim.fn.filereadable(work_path) then
+    package.path = package.path .. work_path
+end
+
+local work_loaded, work = pcall(require, work_path)
 
 local function trim(s)
    return s:gsub("^%s*(.-)%s*$", "%1")
@@ -33,18 +40,24 @@ local function get_equinox_version(plugins_dir)
     return trim(equinox_version)
 end
 
-local plugins_dir = jdtls_dir .. "plugins/"
-local jar = plugins_dir .. get_equinox_version(plugins_dir)
+local function get_jdtls_jar_location()
+    return jdtls_plugins_dir .. get_equinox_version(jdtls_plugins_dir)
+end
 
 local on_attach = function(client, bufnr)
+    if work_loaded then
+        work.add_ws_folders()
+    end
     MapLspCommands(client, bufnr)
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
 end
 
-local bundles = {
-    vim.fn.glob(nvim_dir .. "mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", 1)
-}
-bundles = vim.list_extend(bundles, vim.split(vim.fn.glob(nvim_dir .. "mason/packages/java-test/extension/server/*.jar", 1), "\n"))
+local function get_bundles()
+    local bundles = {
+        vim.fn.glob(nvim_dir .. "mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", 1)
+    }
+    return vim.list_extend(bundles, vim.split(vim.fn.glob(nvim_dir .. "mason/packages/java-test/extension/server/*.jar", 1), "\n"))
+end
 
 local function setJavaKeyMaps()
     local java_maps = {
@@ -66,44 +79,59 @@ local function setJavaKeyMaps()
         vim.api.nvim_set_keymap(keymap[1], keymap[2], command, { noremap = true })
     end
 end
-setJavaKeyMaps()
 
--- local root_dir = require("jdtls.setup").find_root({"packageInfo"}, "Config")
-package.path = package.path .. ";" .. home .. "/.work.lua"
-local root_dir = require("work").find_root_work()
-local ws_folders_jdtls = {}
-if root_dir then
-    ws_folders_jdtls = require("work").add_ws_root_folders(root_dir)
-else
-    root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'})
+local function get_root_dir()
+    if work_loaded then
+        return work.get_root_dir()
+    end
+    return vim.fs.root(0, {".git", "mvnw", "gradlew"})
 end
-local eclipse_workspace = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
-local config = {
-    on_attach = on_attach,
-    cmd = {
-        'java',
-        '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-        '-Dosgi.bundles.defaultStartLevel=4',
-        '-Declipse.product=org.eclipse.jdt.ls.core.product',
-        '-Dlog.protocol=true',
-        '-Dlog.level=ALL',
-        '-Xms1g',
-        '--add-modules=ALL-SYSTEM',
-        '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-        '-jar', jar,
-        '-configuration', jdtls_dir .. "/config_" .. get_os(),
-        '--jvm-arg=-javaagent:' .. home .. "/Developer/lombok.jar",
-        '-data', eclipse_workspace
-    },
-    root_dir = root_dir,
-    settings = {
-        java = {}
-    },
-    init_options = {
-        bundles = bundles,
-        workspace_folders = ws_folders_jdtls
-    },
-}
-require('jdtls').start_or_attach(config)
+local function get_ws_folders()
+    if work_loaded then
+        return work.add_ws_folders()
+    end
+    return {}
+end
+
+
+local function get_eclipse_workspace(root_dir)
+    return home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+end
+
+
+local function main()
+    local root_dir = get_root_dir()
+    local config = {
+        on_attach = on_attach,
+        cmd = {
+            'java',
+            '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+            '-Dosgi.bundles.defaultStartLevel=4',
+            '-Declipse.product=org.eclipse.jdt.ls.core.product',
+            '-Dlog.protocol=true',
+            '-Dlog.level=ALL',
+            '-Xms1g',
+            '--add-modules=ALL-SYSTEM',
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+            '-jar', get_jdtls_jar_location(),
+            '-configuration', jdtls_dir .. "/config_" .. get_os(),
+            '--jvm-arg=-javaagent:' .. home .. "/Developer/lombok.jar",
+            '-data', get_eclipse_workspace(root_dir)
+        },
+        root_dir = root_dir,
+        settings = {
+            java = {}
+        },
+        init_options = {
+            bundles = get_bundles(),
+            workspace_folders = get_ws_folders()
+        },
+    }
+
+    setJavaKeyMaps()
+    require('jdtls').start_or_attach(config)
+end
+
+main()
