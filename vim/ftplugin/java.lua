@@ -112,12 +112,12 @@ local function main()
             '-Dlog.protocol=true',
             '-Dlog.level=ALL',
             '-Xms1g',
+            '-javaagent:' .. require('mason-registry').get_package('jdtls'):get_install_path() .. '/lombok.jar',
             '--add-modules=ALL-SYSTEM',
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
             '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
             '-jar', get_jdtls_jar_location(),
             '-configuration', jdtls_dir .. "/config_" .. get_os(),
-            '--jvm-arg=-javaagent:' .. home .. "/Developer/lombok.jar",
             '-data', get_eclipse_workspace(root_dir)
         },
         root_dir = root_dir,
