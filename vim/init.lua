@@ -109,7 +109,6 @@ local plugins = {
     'christoomey/vim-tmux-navigator',
     'preservim/vimux',
     'vimwiki/vimwiki',
-    'folke/neodev.nvim',
 
     -- lsp stuff
     'neovim/nvim-lspconfig',
@@ -130,6 +129,11 @@ local plugins = {
     'mfussenegger/nvim-dap',
     'theHamsta/nvim-dap-virtual-text',
     'rcarriga/nvim-dap-ui',
+    {
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {},
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    },
     {
         'stevearc/aerial.nvim',
         opts = {
@@ -343,7 +347,19 @@ local plugins = {
                 relativenumber = true
             }
         }
-    }
+    },
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "luvit-meta/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+    { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
 }
 require('lazy').setup(plugins)
 
@@ -443,7 +459,7 @@ local language_configs = {
         parser = "smithy"
     },
     {
-        language_server = "tsserver",
+        language_server = "ts_ls",
         parser = "typescript"
     },
     {
@@ -752,6 +768,7 @@ cmp.setup({
         end)
     },
     sources = cmp.config.sources({
+        { name = "lazydev", group_index = 0 },
         { name = "nvim_lsp" },
         { name = "luasnip" }
     }, {
