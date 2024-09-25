@@ -100,6 +100,7 @@ local plugins = {
     'nvimtools/none-ls.nvim',
     'mfussenegger/nvim-jdtls',
     'mrded/nvim-lsp-notify',
+    'rcarriga/cmp-dap',
     'rcarriga/nvim-notify',
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
@@ -710,7 +711,7 @@ local has_words_before = function()
     return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
-local cmp = require "cmp"
+local cmp = require('cmp')
 local lspkind = require('lspkind')
 
 -- Include the servers you want to have installed by default below
@@ -756,6 +757,19 @@ cmp.setup({
     }, {
         { name = "buffer" },
     }),
+})
+
+cmp.setup({
+  enabled = function()
+    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+        or require("cmp_dap").is_dap_buffer()
+  end
+})
+
+cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+  sources = {
+    { name = "dap" },
+  },
 })
 
 cmp.setup.filetype("gitcommit", {

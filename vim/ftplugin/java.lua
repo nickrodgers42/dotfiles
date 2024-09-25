@@ -50,13 +50,24 @@ local on_attach = function(client, bufnr)
     end
     MapLspCommands(client, bufnr)
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
+    local dap = require('dap')
+    dap.configurations.java = {
+        {
+            type = 'java',
+            request = 'attach',
+            name = 'attach to process',
+            hostname = 'localhost',
+            port = 5005
+        }
+    }
 end
 
 local function get_bundles()
     local bundles = {
-        vim.fn.glob(nvim_dir .. "mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", 1)
+        vim.fn.glob(nvim_dir .. "mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true),
+        vim.fn.glob(home .. "/Developer/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar", true)
     }
-    return vim.list_extend(bundles, vim.split(vim.fn.glob(nvim_dir .. "mason/packages/java-test/extension/server/*.jar", 1), "\n"))
+    return vim.list_extend(bundles, vim.split(vim.fn.glob(nvim_dir .. "mason/packages/java-test/extension/server/*.jar", true), "\n"))
 end
 
 local function setJavaKeyMaps()
