@@ -51,7 +51,6 @@ source $ZSH/oh-my-zsh.sh
 # Znap plugins
 znap source zsh-users/zsh-syntax-highlighting
 source $HOME/Git/romkatv/powerlevel10k/powerlevel10k.zsh-theme
-ZSH_THEME="powerlevel10k"
 
 # User configuration
 set -o vi

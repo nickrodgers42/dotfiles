@@ -70,6 +70,7 @@ vim.g.vimwiki_list = {
         listsyms_rejected = '✗'
     }
 }
+vim.g.vimwiki_global_ext = 0
 
 vim.g.mapleader = " "
 
@@ -97,7 +98,12 @@ local plugins = {
     'nmac427/guess-indent.nvim',
     'onsails/lspkind.nvim',
     'Shatur/neovim-session-manager',
-    'nvimtools/none-ls.nvim',
+    {
+        'nvimtools/none-ls.nvim',
+        dependencies = {
+            "nvimtools/none-ls-extras.nvim",
+        }
+    },
     'mfussenegger/nvim-jdtls',
     'mrded/nvim-lsp-notify',
     'rcarriga/cmp-dap',
@@ -215,6 +221,8 @@ local plugins = {
             }
         }
     },
+    { 'echasnovski/mini.surround', version = '*' },
+    { 'echasnovski/mini.icons', version = '*' },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
@@ -277,11 +285,18 @@ local plugins = {
         }
     },
     {
-        "folke/which-key.nvim",
-        config = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 300
-        end,
+      "folke/which-key.nvim",
+      event = "VeryLazy",
+      opts = { },
+      keys = {
+        {
+          "<leader>?",
+          function()
+            require("which-key").show({ global = false })
+          end,
+          desc = "Buffer Local Keymaps (which-key)",
+        },
+      },
     },
     {
         'L3MON4D3/LuaSnip',
@@ -360,6 +375,43 @@ local plugins = {
         },
     },
     { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+    {
+      "folke/trouble.nvim",
+      opts = {}, -- for default options, refer to the configuration section for custom setup.
+      cmd = "Trouble",
+      keys = {
+        {
+          "<leader>xx",
+          "<cmd>Trouble diagnostics toggle<cr>",
+          desc = "Diagnostics (Trouble)",
+        },
+        {
+          "<leader>xX",
+          "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+          desc = "Buffer Diagnostics (Trouble)",
+        },
+        {
+          "<leader>cs",
+          "<cmd>Trouble symbols toggle focus=false<cr>",
+          desc = "Symbols (Trouble)",
+        },
+        {
+          "<leader>cl",
+          "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+          desc = "LSP Definitions / references / ... (Trouble)",
+        },
+        {
+          "<leader>xL",
+          "<cmd>Trouble loclist toggle<cr>",
+          desc = "Location List (Trouble)",
+        },
+        {
+          "<leader>xQ",
+          "<cmd>Trouble qflist toggle<cr>",
+          desc = "Quickfix List (Trouble)",
+        },
+      },
+    },
 }
 require('lazy').setup(plugins)
 
@@ -370,9 +422,9 @@ local default_setup = {
     'guess-indent',
     'ibl',
     'mason',
+    'mini.surround',
     'nvim-dap-virtual-text',
-    'telescope',
-    'which-key',
+    'telescope'
 }
 for _, package in ipairs(default_setup) do
     require(package).setup()
@@ -460,10 +512,21 @@ local language_configs = {
     },
     {
         language_server = "ts_ls",
-        parser = "typescript"
+        parser = "typescript",
+        lsp_init_options = {
+            preferences = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+            }
+        }
     },
     {
-        language_server = "eslint"
+        language_server = "eslint",
     },
     {
         language_server = "yamlls",
@@ -480,6 +543,13 @@ local language_configs = {
     {
         parser = "vimdoc"
     },
+    {
+        language_server = "rubocop"
+    },
+    {
+        language_server = "solargraph"
+    }
+
 }
 
 local buf_map = function(bufnr, mapping, command, opts)
@@ -528,6 +598,10 @@ cmp_nvim_lsp.setup {
 }
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
+local function lsp_on_attach(client, bufnr)
+    MapLspCommands(_, bufnr)
+end
+
 local function install_language_servers(configs)
     local servers = {}
     local parsers = {}
@@ -541,11 +615,12 @@ local function install_language_servers(configs)
                 autostart = config.autostart
             end
             lspconfig[config.language_server].setup {
-                on_attach = MapLspCommands,
+                on_attach = lsp_on_attach,
                 capabilities = capabilities,
                 settings = config.lspconfig_settings,
                 autostart = autostart,
-                cmd = config.cmd
+                cmd = config.cmd,
+                init_options = config.lsp_init_options
             }
         end
         if config.parser ~= nil then
@@ -585,7 +660,10 @@ vim.g.rustaceanvim = {
     },
     -- LSP configuration
     server = {
-        on_attach = MapLspCommands,
+        on_attach = function(_, bufnr)
+            MapLspCommands()
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end,
         default_settings = {
             -- rust-analyzer language server configuration
             ['rust-analyzer'] = {
@@ -594,7 +672,7 @@ vim.g.rustaceanvim = {
                     experimental = {
                         enable = true
                     }
-                }
+                },
             },
         },
     },
@@ -622,6 +700,7 @@ local nmaps = {
     { '<C-p>',       'lua require("telescope.builtin").find_files()' },
     { '<leader>B',   'lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))' },
     { '<leader>a',   'AerialToggle!' },
+    { '<leader>h',   'lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())' },
     { '<leader>b',   'lua require("dap").toggle_breakpoint()' },
     { '<leader>dd',  'lua require("dap").continue()' },
     { '<leader>di',  'lua require("dap").step_into()' },
@@ -633,7 +712,7 @@ local nmaps = {
     { '<leader>dr',  'lua require("dap").repl.open()' },
     { '<leader>e',   'lua vim.diagnostic.open_float()' },
     { '<leader>fa',  'lua require("telescope").extensions.aerial.aerial()' },
-    { '<leader>fb',  'lua require("telescope.builtin").buffers()' },
+    { 'leader>fb',  'lua require("telescope.builtin").buffers()' },
     { '<leader>ff',  'lua require("telescope.builtin").find_files({no_ignore=true, hidden=true})' },
     { '<leader>fg',  'lua require("telescope.builtin").live_grep()' },
     { '<leader>fh',  'lua require("telescope.builtin").help_tags()' },
@@ -777,16 +856,16 @@ cmp.setup({
 })
 
 cmp.setup({
-  enabled = function()
-    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
-        or require("cmp_dap").is_dap_buffer()
-  end
+    enabled = function()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+            or require("cmp_dap").is_dap_buffer()
+    end
 })
 
 cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-  sources = {
-    { name = "dap" },
-  },
+    sources = {
+        { name = "dap" },
+    },
 })
 
 cmp.setup.filetype("gitcommit", {
@@ -862,7 +941,8 @@ local null_ls = require("null-ls")
 null_ls.setup({
     sources = {
         null_ls.builtins.code_actions.gitsigns,
-        null_ls.builtins.formatting.prettier
+        null_ls.builtins.formatting.prettier,
+        require("none-ls.diagnostics.eslint")
     },
     on_attach = MapLspCommands
 })
