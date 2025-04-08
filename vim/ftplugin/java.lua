@@ -46,7 +46,7 @@ end
 
 local on_attach = function(client, bufnr)
     if work_loaded then
-        work.add_ws_folders()
+        work.add_ws_folders(work.get_ws_folders())
     end
     MapLspCommands(client, bufnr)
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
@@ -75,6 +75,7 @@ local function setJavaKeyMaps()
         {'n', '<Leader>dT', 'lua require("jdtls").test_class()' },
         {'n', '<Leader>ds', 'lua require("jdtls.dap").setup_dap_main_class_configs()' },
         {'n', '<Leader>dt', 'lua require("jdtls").test_nearest_method()' },
+        {'n', '<Leader>da', 'lua require("dap").continue()' },
         {'n', 'cao', 'lua require("jdtls").organize_imports()'},
         {'n', 'crc', 'lua require("jdtls").extract_constant()' },
         {'n', 'crv', 'lua require("jdtls").extract_variable()'},
@@ -100,7 +101,7 @@ end
 
 local function get_ws_folders()
     if work_loaded then
-        return work.add_ws_folders()
+        return work.get_ws_folders()
     end
     return {}
 end
@@ -128,8 +129,8 @@ local function main()
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
             '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
             '-jar', get_jdtls_jar_location(),
-            '-configuration', jdtls_dir .. "/config_" .. get_os(),
-            '-data', get_eclipse_workspace(root_dir)
+            '-configuration', jdtls_dir .. "config_" .. get_os() .. "_arm",
+            '-data', get_eclipse_workspace(root_dir),
         },
         root_dir = root_dir,
         settings = {
