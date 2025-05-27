@@ -124,7 +124,7 @@ local function main()
             '-Dlog.protocol=true',
             '-Dlog.level=ALL',
             '-Xms1g',
-            '-javaagent:' .. require('mason-registry').get_package('jdtls'):get_install_path() .. '/lombok.jar',
+            '-javaagent:' .. vim.fn.expand("$MASON/share/jdtls/lombok.jar"),
             '--add-modules=ALL-SYSTEM',
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
             '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
