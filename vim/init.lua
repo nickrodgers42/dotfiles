@@ -726,10 +726,11 @@ local nmaps = {
     { '<leader>dr',  'lua require("dap").repl.open()' },
     { '<leader>e',   'lua vim.diagnostic.open_float()' },
     { '<leader>fa',  'lua require("telescope").extensions.aerial.aerial()' },
-    { 'leader>fb',  'lua require("telescope.builtin").buffers()' },
+    { '<leader>fb',  'lua require("telescope.builtin").buffers()' },
     { '<leader>ff',  'lua require("telescope.builtin").find_files({no_ignore=true, hidden=true})' },
     { '<leader>fg',  'lua require("telescope.builtin").live_grep()' },
     { '<leader>fh',  'lua require("telescope.builtin").help_tags()' },
+    { '<leader>fw',  'lua require("telescope.builtin").lsp_workspace_symbols()' },
     { '<leader>fj',  '%!jq' },
     { '<leader>fv',  'lua require("telescope.builtin").find_files({search_dirs={"~/dotfiles"}, hidden=true})' },
     { '<leader>lp',  'lua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))' },
@@ -989,3 +990,6 @@ vim.cmd [[
 au BufNewFile,BufRead *.frag set filetype=glsl
 au BufNewFile,BufRead *.vert set filetype=glsl
 ]]
+
+-- Replace \n with carrage returns and replace \t with tabs
+vim.api.nvim_create_user_command("FormatLog", [[:silent %s/\\n/\r/g | :%s/\\t/\t/g]], {})
