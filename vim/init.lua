@@ -620,22 +620,21 @@ local function install_language_servers(configs)
     local servers = {}
     local parsers = {}
     local debuggers = {}
-    local lspconfig = require("lspconfig")
     for _, config in ipairs(configs) do
         if config.language_server ~= nil then
             table.insert(servers, config.language_server)
+            vim.lsp.config(config.language_server, {
+                capabilities = capabilities,
+                on_attach = lsp_on_attach,
+                settings = config.lspconfig_settings,
+                cmd = config.cmd,
+                init_options = config.lsp_init_options
+            })
             local autostart = true
             if config.autostart ~= nil then
                 autostart = config.autostart
             end
-            lspconfig[config.language_server].setup {
-                on_attach = lsp_on_attach,
-                capabilities = capabilities,
-                settings = config.lspconfig_settings,
-                autostart = autostart,
-                cmd = config.cmd,
-                init_options = config.lsp_init_options
-            }
+            vim.lsp.enable(config.language_server, autostart)
         end
         if config.parser ~= nil then
             table.insert(parsers, config.parser)
@@ -648,7 +647,8 @@ local function install_language_servers(configs)
     end
     require("mason-lspconfig").setup({
         ensure_installed = servers,
-        automatic_installation = true
+        automatic_installation = true,
+        automatic_enable = false
     })
     require('nvim-treesitter.configs').setup {
         auto_install = true,
