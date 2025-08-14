@@ -1,3 +1,17 @@
+
+local paw = {
+    '⠀⠀⠀⠀⠀⢠⣒⣤⠤⣀⣀',
+    '⠀⠀⠠⣒⢤⠋⠉⠈⡷⠒⠒⣗⠢⡀',
+    '⠀⢠⠋⠀⡇⠀⠀⣰⠁⠀⢀⡼⠠⣱',
+    '⠀⢈⠀⠀⣧⣀⣠⣏⢀⠴⠋⠉⠙⡟⡄',
+    '⠀⠘⣄⢠⠟⠉⠉⢻⡎⠀⠀⠀⣸⠇⢸',
+    '⠀⢀⠜⡏⠁⠀⠀⠀⣧⣀⣠⠾⠋⠀⡜',
+    '⠀⡜⠀⠁⠀⠀⠀⠀⠘⣷⠀⠀⡠⠊⠀⠀',
+    '⠀⠹⣁⡤⢾⡀⠀⠀⢠⠏⠀⡐⠁',
+    '⠀⠀⡇⢴⠀⠉⠒⠚⠃⠀⢠',
+    '⠀⢸⠀⠈⠁⠀⠀⠀⠀⠀⡎'
+}
+
 local raccoon = {
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
     '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
@@ -899,6 +913,17 @@ require('session_manager').setup({
 })
 
 vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
+
+
+function getHeaderArt()
+    math.randomseed(os.time())
+    local val = math.random(2)
+    if (val == 1) then
+        return paw
+    end
+    return raccoon
+end
+
 local function configureAlpha()
     local alpha = require 'alpha'
     local dashboard = require 'alpha.themes.dashboard'
@@ -910,7 +935,7 @@ local function configureAlpha()
             position = "center",
             hl = 'Title'
         },
-        val = raccoon
+        val = getHeaderArt
     }
     dashboard.section.buttons.val = {
         dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),
