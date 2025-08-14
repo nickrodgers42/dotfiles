@@ -111,6 +111,12 @@ local function get_eclipse_workspace(root_dir)
     return home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 end
 
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
+cmp_nvim_lsp.setup {
+    sources = {
+        name = 'nvim_lsp'
+    }
+}
 
 local function main()
     local root_dir = get_root_dir()
@@ -140,6 +146,7 @@ local function main()
             bundles = get_bundles(),
             workspace_folders = get_ws_folders()
         },
+        capabilities = cmp_nvim_lsp.default_capabilities()
     }
 
     setJavaKeyMaps()
