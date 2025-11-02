@@ -331,10 +331,12 @@ local plugins = {
         version = '^4', -- Recommended
         ft = { 'rust' },
     },
-
-    -- Telescope
-    'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope.nvim',
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        }
+    },
     {
         'nvim-treesitter/nvim-treesitter',
         build = ":TSUpdate"
@@ -438,11 +440,19 @@ local default_setup = {
     'mason',
     'mini.surround',
     'nvim-dap-virtual-text',
-    'telescope'
 }
 for _, package in ipairs(default_setup) do
     require(package).setup()
 end
+
+require("telescope").setup {
+    defaults = {
+        file_ignore_patterns = {
+          "package%-lock.json",
+          "node_modules/"
+        }
+    }
+}
 
 require("neotest").setup {
     adapters = {
@@ -461,10 +471,10 @@ local language_configs = {
         parser = "elixir",
         cmd = { "/Users/nrdg/.local/share/nvim/mason/bin/elixir-ls" }
     },
-    {
-        language_server = "gopls",
-        parser = "go"
-    },
+    -- {
+    --     language_server = "gopls",
+    --     parser = "go"
+    -- },
     {
         language_server = "jdtls",
         parser = "java",
@@ -521,7 +531,7 @@ local language_configs = {
         parser = "rust",
     },
     {
-        language_server = "smithy_ls",
+        -- language_server = "smithy_ls",
         parser = "smithy"
     },
     {
@@ -560,9 +570,9 @@ local language_configs = {
     {
         language_server = "rubocop"
     },
-    {
-        language_server = "solargraph"
-    }
+    -- {
+    --     -- language_server = "solargraph"
+    -- }
 
 }
 
@@ -916,15 +926,6 @@ require('session_manager').setup({
 vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
 
 
-function getHeaderArt()
-    math.randomseed(os.time())
-    local val = math.random(2)
-    if (val == 1) then
-        return paw
-    end
-    return raccoon
-end
-
 local function configureAlpha()
     local alpha = require 'alpha'
     local dashboard = require 'alpha.themes.dashboard'
@@ -936,7 +937,7 @@ local function configureAlpha()
             position = "center",
             hl = 'Title'
         },
-        val = getHeaderArt
+        val = require("header").getHeader()
     }
     dashboard.section.buttons.val = {
         dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),

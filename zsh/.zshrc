@@ -19,10 +19,10 @@ export VISUAL=nvim
 export EDITOR="$VISUAL"
 
 export aws_cli_auto_prompt=on-partial
+export AWS_PAGER=""
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
-
 
 # OhMyZsh Options
 
