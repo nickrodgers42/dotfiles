@@ -118,7 +118,6 @@ local plugins = {
             "nvimtools/none-ls-extras.nvim",
         }
     },
-    'mfussenegger/nvim-jdtls',
     'mrded/nvim-lsp-notify',
     'rcarriga/cmp-dap',
     'rcarriga/nvim-notify',
@@ -299,18 +298,18 @@ local plugins = {
         }
     },
     {
-      "folke/which-key.nvim",
-      event = "VeryLazy",
-      opts = { },
-      keys = {
-        {
-          "<leader>?",
-          function()
-            require("which-key").show({ global = false })
-          end,
-          desc = "Buffer Local Keymaps (which-key)",
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {},
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
         },
-      },
     },
     {
         'L3MON4D3/LuaSnip',
@@ -426,7 +425,11 @@ local plugins = {
           "<cmd>Trouble qflist toggle<cr>",
           desc = "Quickfix List (Trouble)",
         },
-      },
+    },
+    {
+        'nvim-java/nvim-java',
+        config = function()
+        end,
     },
 }
 require('lazy').setup(plugins)
@@ -448,8 +451,8 @@ end
 require("telescope").setup {
     defaults = {
         file_ignore_patterns = {
-          "package%-lock.json",
-          "node_modules/"
+            "package%-lock.json",
+            "node_modules/"
         }
     }
 }
@@ -475,12 +478,6 @@ local language_configs = {
     --     language_server = "gopls",
     --     parser = "go"
     -- },
-    {
-        language_server = "jdtls",
-        parser = "java",
-        debuggers = { "java-debug-adapter", "java-test" },
-        autostart = false
-    },
     {
         language_server = "kotlin_language_server",
         parser = "kotlin",
@@ -598,21 +595,45 @@ local buf_maps = {
     { 'gk',         'lua vim.lsp.buf.signature_help()' },
 }
 
-MapLspCommands = function(_, bufnr)
+require("notify").setup({
+    background_colour = "#000000",
+    merge_duplicates = true,
+    timeout = 2500,
+})
+
+vim.notify = require('notify')
+
+local logged_clients = {}
+
+MapLspCommands = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
+    if type(client) == "number" then
+        bufnr = client
+        client = nil
+    end
+
+    if client and client.name and not logged_clients[client.name] then
+        vim.notify("LSP client '" .. client.name .. "' started", vim.log.levels.INFO,
+        {
+            render = "compact",
+            timeout = 500,
+        })
+        logged_clients[client.name] = true
+    end
     for _, keymap in ipairs(buf_maps) do
         buf_map(bufnr, unpack(keymap))
     end
 end
 
--- vim.api.nvim_create_autocmd('LspAttach', {
---     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
---     callback = function(event)
---         MapLspCommands(nil, event.buf)
---     end
--- })
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(event)
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        MapLspCommands(client, event.buf)
+    end
+})
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 cmp_nvim_lsp.setup {
@@ -623,8 +644,16 @@ cmp_nvim_lsp.setup {
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
 local function lsp_on_attach(client, bufnr)
-    MapLspCommands(_, bufnr)
+    MapLspCommands(client, bufnr)
 end
+
+require('java').setup({
+    jdk = {
+        auto_install = false,
+    },
+    on_attach = lsp_on_attach,
+})
+vim.lsp.enable('jdtls')
 
 local function install_language_servers(configs)
     local servers = {}
@@ -820,10 +849,6 @@ SourceIfExists(os.getenv("HOME") .. "/.work.lua")
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('aerial')
 
-require("notify").setup({
-    background_colour = "#000000",
-})
-vim.notify = require('notify')
 
 local has_words_before = function()
     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
@@ -971,7 +996,6 @@ null_ls.setup({
         null_ls.builtins.formatting.prettier,
         require("none-ls.diagnostics.eslint")
     },
-    on_attach = MapLspCommands
 })
 
 local in_wsl = os.getenv('WSL_DISTRO_NAME') ~= nil
