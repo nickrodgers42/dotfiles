@@ -1,35 +1,3 @@
-
-local paw = {
-    '⠀⠀⠀⠀⠀⢠⣒⣤⠤⣀⣀',
-    '⠀⠀⠠⣒⢤⠋⠉⠈⡷⠒⠒⣗⠢⡀',
-    '⠀⢠⠋⠀⡇⠀⠀⣰⠁⠀⢀⡼⠠⣱',
-    '⠀⢈⠀⠀⣧⣀⣠⣏⢀⠴⠋⠉⠙⡟⡄',
-    '⠀⠘⣄⢠⠟⠉⠉⢻⡎⠀⠀⠀⣸⠇⢸',
-    '⠀⢀⠜⡏⠁⠀⠀⠀⣧⣀⣠⠾⠋⠀⡜',
-    '⠀⡜⠀⠁⠀⠀⠀⠀⠘⣷⠀⠀⡠⠊⠀⠀',
-    '⠀⠹⣁⡤⢾⡀⠀⠀⢠⠏⠀⡐⠁',
-    '⠀⠀⡇⢴⠀⠉⠒⠚⠃⠀⢠',
-    '⠀⢸⠀⠈⠁⠀⠀⠀⠀⠀⡎'
-}
-
-local raccoon = {
-    '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⢠⣾⣷⣦⣄⠀⠀⣀⣀⣀⣀⣀⣀⠀⠀⣠⣴⣾⣷⡄⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⣿⠀⠀⣿⠟⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠻⣿⠀⠀⣿⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⣿⠀⣾⠋⠀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠙⣷⠀⣿⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⣿⠏⣠⣾⣿⣿⣿⣿⣷⣦⣴⣾⣿⣿⣿⣿⣷⣄⠹⣿⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⢁⣼⣿⠿⠛⠉⠉⠛⢿⣿⣿⡿⠛⠉⠉⠛⠿⣿⣧⡈⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⣠⡿⠛⠁⠀⣀⣤⣤⣀⠈⢿⡿⠁⣀⣤⣤⣀⠀⠈⠛⢿⣄⠀⠀⠀⠀',
-    '⠀⠀⢀⣼⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣦⣴⠟⠀⠀⠀⠀⠻⣧⡀⠀⠀',
-    '⠀⠰⣿⡏⠀⠀⠀⠀⠀⠀⣀⣤⣄⠀⢤⡤⠀⣠⣤⣀⠀⠀⠀⠀⠀⠀⢹⣿⠆⠀',
-    '⠀⠀⠀⠈⠢⣀⠀⠀⣴⣿⣿⡿⢿⣷⠀⠀⣾⡿⢿⣿⣿⣦⠀⠀⣀⠔⠁⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⠀⠉⠙⢿⣿⣿⣷⣤⣤⣴⣦⣤⣤⣾⣿⣿⡿⠋⠉⠀⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⠿⠟⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'
-}
-
 local vim_opts = {
     autoindent = true,
     backspace = "indent,eol,start",
@@ -87,6 +55,17 @@ vim.g.vimwiki_list = {
 vim.g.vimwiki_global_ext = 0
 
 vim.g.mapleader = " "
+vim.cmd.filetype('plugin on')
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+    pattern = { '*.frag', '*.vert' },
+    callback = function()
+        vim.bo.filetype = 'glsl'
+    end,
+})
+
+vim.g.tmux_navigator_no_mappings = 1
+vim.g.VimuxOrientation = "h"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -104,23 +83,12 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     -- General Plugins
     'davidsierradz/cmp-conventionalcommits',
-    'numToStr/Comment.nvim',
-    'goolord/alpha-nvim',
     'famiu/bufdelete.nvim',
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
-    'nmac427/guess-indent.nvim',
     'onsails/lspkind.nvim',
-    'Shatur/neovim-session-manager',
-    {
-        'nvimtools/none-ls.nvim',
-        dependencies = {
-            "nvimtools/none-ls-extras.nvim",
-        }
-    },
     'mrded/nvim-lsp-notify',
     'rcarriga/cmp-dap',
-    'rcarriga/nvim-notify',
     'windwp/nvim-ts-autotag',
     'tpope/vim-fugitive',
     'tpope/vim-abolish',
@@ -131,7 +99,6 @@ local plugins = {
 
     -- lsp stuff
     'neovim/nvim-lspconfig',
-    'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
 
     -- nvim-cmp
@@ -143,11 +110,92 @@ local plugins = {
     'hrsh7th/nvim-cmp',
     'hrsh7th/vim-vsnip',
 
-    -- nvim-dap
-    'jayp0521/mason-nvim-dap.nvim',
-    'mfussenegger/nvim-dap',
-    'theHamsta/nvim-dap-virtual-text',
-    'rcarriga/nvim-dap-ui',
+    -- set opts for default setup
+    { 'nmac427/guess-indent.nvim',       opts = {} },
+    { 'williamboman/mason.nvim',         opts = {} },
+    { 'numToStr/Comment.nvim',           opts = {} },
+    { 'theHamsta/nvim-dap-virtual-text', opts = {} },
+    {
+        'Shatur/neovim-session-manager',
+        config = function()
+            local session_manager_config = require('session_manager.config')
+            require('session_manager').setup({
+                autoload_mode = session_manager_config.AutoloadMode.Disabled,
+            })
+        end
+    },
+    {
+        'goolord/alpha-nvim',
+        config = function()
+            local alpha = require 'alpha'
+            local dashboard = require 'alpha.themes.dashboard'
+            local startify = require 'alpha.themes.startify'
+            local fortune = require 'alpha.fortune' ()
+            dashboard.section.header = {
+                type = "text",
+                opts = {
+                    position = "center",
+                    hl = 'Title'
+                },
+                val = require("header").getHeader()
+            }
+            dashboard.section.buttons.val = {
+                dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+                dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+                dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+                dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+                dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+                dashboard.button("sc", "󰦛" .. " Restore cwd session", [[:SessionManager load_current_dir_session<CR>]]),
+                dashboard.button("sl", "󰦛" .. " Restore last session", [[:SessionManager load_last_session<CR>]]),
+                dashboard.button("l", "" .. " Lazy", ":Lazy<CR>"),
+                dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+            }
+            dashboard.config.layout = {
+                dashboard.section.header,
+                { type = "text",    val = fortune, opts = { position = 'center', hl = 'Title' } },
+                { type = "padding", val = 2 },
+                dashboard.section.buttons,
+                { type = "padding", val = 1 },
+                startify.section.mru_cwd,
+                { type = "padding", val = 1 },
+                startify.section.mru,
+            }
+            alpha.setup(dashboard.config)
+        end
+    },
+    {
+        'rcarriga/nvim-notify',
+        opts = {
+            background_colour = "#000000",
+            merge_duplicates = true,
+            timeout = 2500,
+        }
+    },
+    {
+        'nvimtools/none-ls.nvim',
+        dependencies = {
+            "nvimtools/none-ls-extras.nvim",
+        },
+        config = function()
+            local null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.code_actions.gitsigns,
+                    null_ls.builtins.formatting.prettier,
+                    require("none-ls.diagnostics.eslint")
+                },
+            })
+        end
+    },
+    {
+        'rcarriga/nvim-dap-ui',
+        opts = {},
+        dependencies = {
+            'jayp0521/mason-nvim-dap.nvim',
+            'mfussenegger/nvim-dap',
+            'theHamsta/nvim-dap-virtual-text',
+        }
+    },
     {
         'MeanderingProgrammer/render-markdown.nvim',
         opts = {},
@@ -234,8 +282,8 @@ local plugins = {
             }
         }
     },
-    { 'echasnovski/mini.surround', version = '*' },
-    { 'echasnovski/mini.icons', version = '*' },
+    { 'echasnovski/mini.surround', version = '*', opts = {} },
+    { 'echasnovski/mini.icons',    version = '*' },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
@@ -323,7 +371,15 @@ local plugins = {
             "antoinemadec/FixCursorHold.nvim",
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-python",
-        }
+        },
+        config = function()
+            require("neotest").setup {
+                adapters = {
+                    require("rustaceanvim.neotest"),
+                    require("neotest-python")
+                }
+            }
+        end
     },
     {
         'mrcjkb/rustaceanvim',
@@ -334,6 +390,14 @@ local plugins = {
         'nvim-telescope/telescope.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim'
+        },
+        opts = {
+            defaults = {
+                file_ignore_patterns = {
+                    "package%-lock.json",
+                    "node_modules/"
+                }
+            }
         }
     },
     {
@@ -391,39 +455,40 @@ local plugins = {
     },
     { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
     {
-      "folke/trouble.nvim",
-      opts = {}, -- for default options, refer to the configuration section for custom setup.
-      cmd = "Trouble",
-      keys = {
-        {
-          "<leader>xx",
-          "<cmd>Trouble diagnostics toggle<cr>",
-          desc = "Diagnostics (Trouble)",
-        },
-        {
-          "<leader>xX",
-          "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-          desc = "Buffer Diagnostics (Trouble)",
-        },
-        {
-          "<leader>cs",
-          "<cmd>Trouble symbols toggle focus=false<cr>",
-          desc = "Symbols (Trouble)",
-        },
-        {
-          "<leader>cl",
-          "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-          desc = "LSP Definitions / references / ... (Trouble)",
-        },
-        {
-          "<leader>xL",
-          "<cmd>Trouble loclist toggle<cr>",
-          desc = "Location List (Trouble)",
-        },
-        {
-          "<leader>xQ",
-          "<cmd>Trouble qflist toggle<cr>",
-          desc = "Quickfix List (Trouble)",
+        "folke/trouble.nvim",
+        opts = {}, -- for default options, refer to the configuration section for custom setup.
+        cmd = "Trouble",
+        keys = {
+            {
+                "<leader>xx",
+                "<cmd>Trouble diagnostics toggle<cr>",
+                desc = "Diagnostics (Trouble)",
+            },
+            {
+                "<leader>xX",
+                "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+                desc = "Buffer Diagnostics (Trouble)",
+            },
+            {
+                "<leader>cs",
+                "<cmd>Trouble symbols toggle focus=false<cr>",
+                desc = "Symbols (Trouble)",
+            },
+            {
+                "<leader>cl",
+                "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+                desc = "LSP Definitions / references / ... (Trouble)",
+            },
+            {
+                "<leader>xL",
+                "<cmd>Trouble loclist toggle<cr>",
+                desc = "Location List (Trouble)",
+            },
+            {
+                "<leader>xQ",
+                "<cmd>Trouble qflist toggle<cr>",
+                desc = "Quickfix List (Trouble)",
+            },
         },
     },
     {
@@ -433,36 +498,6 @@ local plugins = {
     },
 }
 require('lazy').setup(plugins)
-
-local default_setup = {
-    'Comment',
-    'dapui',
-    'gitsigns',
-    'guess-indent',
-    'ibl',
-    'mason',
-    'mini.surround',
-    'nvim-dap-virtual-text',
-}
-for _, package in ipairs(default_setup) do
-    require(package).setup()
-end
-
-require("telescope").setup {
-    defaults = {
-        file_ignore_patterns = {
-            "package%-lock.json",
-            "node_modules/"
-        }
-    }
-}
-
-require("neotest").setup {
-    adapters = {
-        require("rustaceanvim.neotest"),
-        require("neotest-python")
-    }
-}
 
 local language_configs = {
     {
@@ -595,45 +630,19 @@ local buf_maps = {
     { 'gk',         'lua vim.lsp.buf.signature_help()' },
 }
 
-require("notify").setup({
-    background_colour = "#000000",
-    merge_duplicates = true,
-    timeout = 2500,
-})
-
 vim.notify = require('notify')
 
 local logged_clients = {}
 
-MapLspCommands = function(client, bufnr)
+MapLspCommands = function(_, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-    if type(client) == "number" then
-        bufnr = client
-        client = nil
-    end
-
-    if client and client.name and not logged_clients[client.name] then
-        vim.notify("LSP client '" .. client.name .. "' started", vim.log.levels.INFO,
-        {
-            render = "compact",
-            timeout = 500,
-        })
-        logged_clients[client.name] = true
-    end
     for _, keymap in ipairs(buf_maps) do
         buf_map(bufnr, unpack(keymap))
     end
 end
 
-vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-    callback = function(event)
-        local client = vim.lsp.get_client_by_id(event.data.client_id)
-        MapLspCommands(client, event.buf)
-    end
-})
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 cmp_nvim_lsp.setup {
@@ -643,17 +652,30 @@ cmp_nvim_lsp.setup {
 }
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
-local function lsp_on_attach(client, bufnr)
+local function lsp_on_attach(client_id, bufnr)
+    local client = vim.lsp.get_client_by_id(client_id)
+    if type(client) == "number" then
+        bufnr = client
+        client = nil
+    end
+
+    if client and client.name and not logged_clients[client.name] then
+        vim.notify("LSP client '" .. client.name .. "' started", vim.log.levels.INFO,
+            {
+                render = "compact",
+                timeout = 500,
+            })
+        logged_clients[client.name] = true
+    end
     MapLspCommands(client, bufnr)
 end
 
-require('java').setup({
-    jdk = {
-        auto_install = false,
-    },
-    on_attach = lsp_on_attach,
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(event)
+        lsp_on_attach(event.data.client_id, event.buf)
+    end
 })
-vim.lsp.enable('jdtls')
 
 local function install_language_servers(configs)
     local servers = {}
@@ -704,6 +726,13 @@ local function install_language_servers(configs)
         ensure_installed = debuggers,
         automatic_installation = true
     }
+    require('java').setup({
+        jdk = {
+            auto_install = false,
+        },
+        on_attach = lsp_on_attach,
+    })
+    vim.lsp.enable('jdtls')
 end
 install_language_servers(language_configs)
 
@@ -809,14 +838,6 @@ local signs = {
 for _, sign in ipairs(signs) do
     vim.fn.sign_define(unpack(sign))
 end
-
-vim.cmd([[
-filetype plugin on
-highlight Normal guibg=none
-]])
-
-vim.g.tmux_navigator_no_mappings = 1
-vim.g.VimuxOrientation = "h"
 
 local highlight_whitespace = vim.api.nvim_create_augroup('highlight_whitespace', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufWinEnter', 'InsertLeave', 'InsertEnter', 'BufWinLeave' }, {
@@ -942,62 +963,6 @@ cmp.setup.cmdline(":", {
     })
 })
 
-
-local session_manager_config = require('session_manager.config')
-require('session_manager').setup({
-    autoload_mode = session_manager_config.AutoloadMode.Disabled,
-})
-
-vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
-
-
-local function configureAlpha()
-    local alpha = require 'alpha'
-    local dashboard = require 'alpha.themes.dashboard'
-    local startify = require 'alpha.themes.startify'
-    local fortune = require 'alpha.fortune' ()
-    dashboard.section.header = {
-        type = "text",
-        opts = {
-            position = "center",
-            hl = 'Title'
-        },
-        val = require("header").getHeader()
-    }
-    dashboard.section.buttons.val = {
-        dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),
-        dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
-        dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
-        dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-        dashboard.button("sc", "󰦛" .. " Restore cwd session", [[:SessionManager load_current_dir_session<CR>]]),
-        dashboard.button("sl", "󰦛" .. " Restore last session", [[:SessionManager load_last_session<CR>]]),
-        dashboard.button("l", "" .. " Lazy", ":Lazy<CR>"),
-        dashboard.button("q", " " .. " Quit", ":qa<CR>"),
-    }
-    dashboard.config.layout = {
-        dashboard.section.header,
-        { type = "text",    val = fortune, opts = { position = 'center', hl = 'Title' } },
-        { type = "padding", val = 2 },
-        dashboard.section.buttons,
-        { type = "padding", val = 1 },
-        startify.section.mru_cwd,
-        { type = "padding", val = 1 },
-        startify.section.mru,
-    }
-    alpha.setup(dashboard.config)
-end
-configureAlpha()
-
-local null_ls = require("null-ls")
-null_ls.setup({
-    sources = {
-        null_ls.builtins.code_actions.gitsigns,
-        null_ls.builtins.formatting.prettier,
-        require("none-ls.diagnostics.eslint")
-    },
-})
-
 local in_wsl = os.getenv('WSL_DISTRO_NAME') ~= nil
 
 if in_wsl then
@@ -1010,11 +975,6 @@ if in_wsl then
 end
 
 vim.api.nvim_create_user_command("SplitCommand", [[:'<,'>s/\s-/ \\\r    -/g]], { range = true })
-vim.cmd [[
-" Recognize glsl
-au BufNewFile,BufRead *.frag set filetype=glsl
-au BufNewFile,BufRead *.vert set filetype=glsl
-]]
-
+vim.api.nvim_create_user_command("ShowHighlights", ":so $VIMRUNTIME/syntax/hitest.vim", {})
 -- Replace \n with carrage returns and replace \t with tabs
 vim.api.nvim_create_user_command("FormatLog", [[:silent %s/\\n/\r/g | :%s/\\t/\t/g]], {})
