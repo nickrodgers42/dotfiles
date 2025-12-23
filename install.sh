@@ -1,71 +1,19 @@
-#1 /bin/zsh
+#1 /bin/bash
 
-install_brew() {
-    echo "Installing brew..."
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-}
+if ! command -v brew &> /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
-install_brew_deps() {
-    echo "Installing dependencies from brew..."
-    brew install \
-        bat \
-        eza \
-        fd \
-        fzf \
-        gcc \
-        jq \
-        make \
-        neovim \
-        ripgrep \
-        stow \
-        tmux
-}
+brew bundle --file=./homebrew/.Brewfile
 
-install_nvm() {
-    echo "Installing nvm..."
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-}
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-install_node() {
-    echo "Installing node..."
-    nvm install node
-}
+nvm install node
+nvm use node
 
-install_node_deps() {
-    echo "Installing dependencies from npm..."
-	npm i -g \
-		eslint \
-		tldr
-}
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-install_tpm() {
-    echo "Installing tpm..."
-	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-}
-
-stow_dotfiles() {
-    make stowall
-}
-
-install() {
-    local OS=$(uname -s)
-    
-    install_brew
-    if [[ $OS = "Linux" ]]
-    then
-        (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/runner/.bashrc
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
-    fi
-
-    install_brew_deps
-    install_nvm
-    install_node
-    install_node_deps
-    install_tpm
-    stow_dotfiles
-}
-
-install
+make stowall
