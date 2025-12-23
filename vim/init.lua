@@ -116,6 +116,17 @@ local plugins = {
     { 'numToStr/Comment.nvim',           opts = {} },
     { 'theHamsta/nvim-dap-virtual-text', opts = {} },
     {
+        "chentoast/marks.nvim",
+        event = "VeryLazy",
+        opts = {},
+    },
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {}
+    },
+    {
         'Shatur/neovim-session-manager',
         config = function()
             local session_manager_config = require('session_manager.config')
@@ -242,19 +253,19 @@ local plugins = {
                 end, { expr = true })
 
                 -- Actions
-                map('n', '<leader>hs', gs.stage_hunk)
-                map('n', '<leader>hr', gs.reset_hunk)
-                map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-                map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-                map('n', '<leader>hS', gs.stage_buffer)
-                map('n', '<leader>hu', gs.undo_stage_hunk)
-                map('n', '<leader>hR', gs.reset_buffer)
-                map('n', '<leader>hp', gs.preview_hunk)
-                map('n', '<leader>hb', function() gs.blame_line { full = true } end)
-                map('n', '<leader>tb', gs.toggle_current_line_blame)
-                map('n', '<leader>hd', gs.diffthis)
-                map('n', '<leader>hD', function() gs.diffthis('~') end)
-                map('n', '<leader>td', gs.toggle_deleted)
+                map('n', '<leader>gs', gs.stage_hunk)
+                map('n', '<leader>gr', gs.reset_hunk)
+                map('v', '<leader>gs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
+                map('v', '<leader>gr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
+                map('n', '<leader>gS', gs.stage_buffer)
+                map('n', '<leader>gu', gs.undo_stage_hunk)
+                map('n', '<leader>gR', gs.reset_buffer)
+                map('n', '<leader>gp', gs.preview_hunk)
+                map('n', '<leader>gb', function() gs.blame_line { full = true } end)
+                map('n', '<leader>gB', gs.toggle_current_line_blame)
+                map('n', '<leader>gd', gs.diffthis)
+                map('n', '<leader>gD', function() gs.diffthis('~') end)
+                map('n', '<leader>gt', gs.toggle_deleted)
 
                 -- Text object
                 map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
@@ -383,7 +394,7 @@ local plugins = {
     },
     {
         'mrcjkb/rustaceanvim',
-        version = '^4', -- Recommended
+        version = '^6', -- Recommended
         ft = { 'rust' },
     },
     {
@@ -493,9 +504,8 @@ local plugins = {
     },
     {
         'nvim-java/nvim-java',
-        config = function()
-        end,
-    },
+        ft = 'java'
+    }
 }
 require('lazy').setup(plugins)
 
@@ -599,9 +609,9 @@ local language_configs = {
     {
         parser = "vimdoc"
     },
-    {
-        language_server = "rubocop"
-    },
+    -- {
+    --     -- language_server = "rubocop"
+    -- },
     -- {
     --     -- language_server = "solargraph"
     -- }
@@ -732,7 +742,12 @@ local function install_language_servers(configs)
         },
         on_attach = lsp_on_attach,
     })
-    vim.lsp.enable('jdtls')
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'java',
+        callback = function()
+            vim.lsp.enable('jdtls')
+        end
+    })
 end
 install_language_servers(language_configs)
 
@@ -765,7 +780,6 @@ vim.g.rustaceanvim = {
 
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {})
 vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {})
-vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true, silent = true })
 
 local map = vim.api.nvim_set_keymap
 local nmap = function(mapping, command, opts)
@@ -774,6 +788,7 @@ local nmap = function(mapping, command, opts)
 end
 
 local nmaps = {
+    { 'Y',           'y$' },
     { '<C-h>',       'TmuxNavigateLeft' },
     { '<C-j>',       'TmuxNavigateDown' },
     { '<C-k>',       'TmuxNavigateUp' },
@@ -781,7 +796,15 @@ local nmaps = {
     { '<C-n>',       'NvimTreeToggle' },
     { '<C-p>',       'lua require("telescope.builtin").find_files()' },
     { '<leader>B',   'lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))' },
-    { '<leader>a',   'AerialToggle!' },
+    { '<leader>hh',  'lua require("harpoon"):list():add()' },
+    { '<leader>hl',  'lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())' },
+    { '<leader>ha',  'lua require("harpoon"):list():select(1)' },
+    { '<leader>hs',  'lua require("harpoon"):list():select(2)' },
+    { '<leader>hd',  'lua require("harpoon"):list():select(3)' },
+    { '<leader>hf',  'lua require("harpoon"):list():select(4)' },
+    { '<leader>hn',  'lua require("harpoon"):list():next()' },
+    { '<leader>hp',  'lua require("harpoon"):list():prev()' },
+
     { '<leader>h',   'lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())' },
     { '<leader>b',   'lua require("dap").toggle_breakpoint()' },
     { '<leader>dd',  'lua require("dap").continue()' },
@@ -797,8 +820,10 @@ local nmaps = {
     { '<leader>fb',  'lua require("telescope.builtin").buffers()' },
     { '<leader>ff',  'lua require("telescope.builtin").find_files({no_ignore=true, hidden=true})' },
     { '<leader>fg',  'lua require("telescope.builtin").live_grep()' },
+    { '<leader>fw',  'lua require("telescope.builtin").live_grep({default_text = vim.fn.expand("<cword>")})' },
     { '<leader>fh',  'lua require("telescope.builtin").help_tags()' },
-    { '<leader>fw',  'lua require("telescope.builtin").lsp_workspace_symbols()' },
+    { '<leader>fs',  'lua require("telescope.builtin").lsp_workspace_symbols()' },
+    { '<leader>/',   'lua require("telescope.builtin").current_buffer_fuzzy_find()' },
     { '<leader>fj',  '%!jq' },
     { '<leader>fv',  'lua require("telescope.builtin").find_files({search_dirs={"~/dotfiles"}, hidden=true})' },
     { '<leader>lp',  'lua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))' },
@@ -830,14 +855,21 @@ local signs = {
     { 'DapBreakpointRejected', { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = '' } },
     { 'DapLogPoint', { text = '', texthl = 'DapLogPoint', linehl = '', numhl = '' } },
     { 'DapStopped', { text = '', texthl = 'DapStopped', linehl = '', numhl = '' } },
-    { 'DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' } },
-    { 'DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' } },
-    { 'DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' } },
-    { 'DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' } },
 }
 for _, sign in ipairs(signs) do
     vim.fn.sign_define(unpack(sign))
 end
+
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '',
+            [vim.diagnostic.severity.HINT] = '',
+            [vim.diagnostic.severity.INFO] = '',
+            [vim.diagnostic.severity.WARN] = '',
+        }
+    }
+})
 
 local highlight_whitespace = vim.api.nvim_create_augroup('highlight_whitespace', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufWinEnter', 'InsertLeave', 'InsertEnter', 'BufWinLeave' }, {
