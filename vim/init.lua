@@ -609,6 +609,12 @@ local language_configs = {
     {
         parser = "vimdoc"
     },
+    {
+        parser = "typespec"
+    },
+    {
+        parser = "sql"
+    },
     -- {
     --     -- language_server = "rubocop"
     -- },
@@ -721,17 +727,15 @@ local function install_language_servers(configs)
         automatic_installation = true,
         automatic_enable = false
     })
-    require('nvim-treesitter.configs').setup {
-        auto_install = true,
-        autotag = {
-            enable = true,
-        },
-        ensure_installed = parsers,
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = true
-        }
-    }
+    require('nvim-treesitter').install(parsers)
+    vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+            local parser = vim.treesitter.language.get_lang(args.match)
+            if parser and pcall(vim.treesitter.language.add, parser) then
+                pcall(vim.treesitter.start)
+            end
+        end
+    })
     require("mason-nvim-dap").setup {
         ensure_installed = debuggers,
         automatic_installation = true
