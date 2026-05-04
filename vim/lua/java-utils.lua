@@ -47,7 +47,7 @@ function M.get_current_method_name()
 
   local child = find_child_by_type(expr, 'identifier')
   if not child then return nil end
-  return vim.treesitter.query.get_node_text(child, 0)
+  return vim.treesitter.get_node_text(child, 0)
 end
 
 -- Get Current Class Name
@@ -60,7 +60,7 @@ function M.get_current_class_name()
   
   local child = find_child_by_type(class_declaration, 'identifier')
   if not child then return nil end
-  return vim.treesitter.query.get_node_text(child, 0)
+  return vim.treesitter.get_node_text(child, 0)
 end
 
 -- Get Current Package Name
@@ -75,7 +75,7 @@ function M.get_current_package_name()
 
   local child = find_child_by_type(package_expr, 'scoped_identifier')
   if not child then return nil end
-  return vim.treesitter.query.get_node_text(child, 0)
+  return vim.treesitter.get_node_text(child, 0)
 end
 
 -- Get Current Full Class Name

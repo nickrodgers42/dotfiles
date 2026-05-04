@@ -56,7 +56,6 @@ vim.g.vimwiki_global_ext = 0
 
 vim.g.mapleader = " "
 vim.cmd.filetype('plugin on')
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
     pattern = { '*.frag', '*.vert' },
     callback = function()
@@ -89,7 +88,10 @@ local plugins = {
     'onsails/lspkind.nvim',
     'mrded/nvim-lsp-notify',
     'rcarriga/cmp-dap',
-    'windwp/nvim-ts-autotag',
+    {
+        'windwp/nvim-ts-autotag',
+        opts = {}
+    },
     'tpope/vim-fugitive',
     'tpope/vim-abolish',
     'psliwka/vim-smoothie',
@@ -274,9 +276,10 @@ local plugins = {
     },
     {
         'nvim-lualine/lualine.nvim',
+        dependencies = { 'catppuccin/nvim' },
         opts = {
             options = {
-                theme = 'catppuccin',
+                theme = 'catppuccin-frappe',
                 section_separators = { left = '', right = '' },
                 component_separators = { left = '', right = '' }
             },
@@ -303,7 +306,11 @@ local plugins = {
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
-        opts = {}
+        opts = {
+            indent = {
+                tab_char = "│",
+            }
+        }
     },
     {
         'catppuccin/nvim',
@@ -413,6 +420,7 @@ local plugins = {
     },
     {
         'nvim-treesitter/nvim-treesitter',
+        lazy = false,
         build = ":TSUpdate"
     },
     {
@@ -509,6 +517,9 @@ local plugins = {
 }
 require('lazy').setup(plugins)
 
+-- after plugin configuration to set telescope bg to none
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
+
 local language_configs = {
     {
         language_server = "bashls",
@@ -519,10 +530,10 @@ local language_configs = {
         parser = "elixir",
         cmd = { "/Users/nrdg/.local/share/nvim/mason/bin/elixir-ls" }
     },
-    -- {
-    --     language_server = "gopls",
-    --     parser = "go"
-    -- },
+    {
+        language_server = "gopls",
+        parser = "go"
+    },
     {
         language_server = "kotlin_language_server",
         parser = "kotlin",
@@ -727,13 +738,32 @@ local function install_language_servers(configs)
         automatic_installation = true,
         automatic_enable = false
     })
-    require('nvim-treesitter').install(parsers)
+    -- require('nvim-treesitter').install(parsers)
+    local installing = {}
     vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
             local parser = vim.treesitter.language.get_lang(args.match)
-            if parser and pcall(vim.treesitter.language.add, parser) then
-                pcall(vim.treesitter.start)
+            if not parser or installing[parser] then return end
+
+            pcall(vim.treesitter.language.add, parser)
+
+            if not pcall(vim.treesitter.get_parser, args.buf, parser) then
+                local parsers_module = require('nvim-treesitter.parsers')
+                if parsers_module[parser] and not installing[parser] then
+                    installing[parser] = true
+                    vim.notify("Installing treesitter parser: " .. parser, vim.log.levels.INFO)
+                    require('nvim-treesitter').install({ parser })
+                    vim.defer_fn(function()
+                        installing[parser] = nil
+                        if vim.api.nvim_buf_is_valid(args.buf) and pcall(vim.treesitter.get_parser, args.buf, parser) then
+                            pcall(vim.treesitter.start, args.buf, parser)
+                        end
+                    end, 3000)
+                end
+                return
             end
+
+            pcall(vim.treesitter.start, args.buf, parser)
         end
     })
     require("mason-nvim-dap").setup {
