@@ -512,7 +512,13 @@ local plugins = {
     },
     {
         'nvim-java/nvim-java',
-        ft = 'java'
+        ft = 'java',
+        config = function()
+            require('java').setup({
+                jdk = { auto_install = false },
+            })
+            vim.lsp.enable('jdtls')
+        end
     }
 }
 require('lazy').setup(plugins)
@@ -610,7 +616,7 @@ local language_configs = {
         parser = "yaml"
     },
     {
-        langauge_server = "wgsl_analyzer",
+        language_server = "wgsl_analyzer",
         parser = "wgsl",
     },
     {
@@ -770,18 +776,6 @@ local function install_language_servers(configs)
         ensure_installed = debuggers,
         automatic_installation = true
     }
-    require('java').setup({
-        jdk = {
-            auto_install = false,
-        },
-        on_attach = lsp_on_attach,
-    })
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'java',
-        callback = function()
-            vim.lsp.enable('jdtls')
-        end
-    })
 end
 install_language_servers(language_configs)
 
@@ -870,7 +864,6 @@ local nmaps = {
     { '<leader>tq',  'lua require("neotest").run.stop()' },
     { '<leader>to',  'lua require("neotest").output_panel.toggle()' },
     { '<leader>tc',  'lua require("neotest").output_panel.clear()' },
-    { '<leader>ts',  'lua require("neotest").summary.toggle()' },
     { '<leader>lt',  'VimwikiListToggle' },
     { '<leader>li',  'VimwikiToggleListItem' },
     { '<leader>lii', 'VimwikiIncrementListItem' },
